@@ -80,25 +80,25 @@ public partial class MainPage : ContentPage
         specieslabel.ItemSource = chineseSpecies;
 
         // 性格列表：使用 PKHeX Core 自带的简体中文名称
-        List<ComboItem> chineseNatures = [];
+        // 性格列表：使用 PKHeX Core 自带的简体中文名称
+List<ComboItem> chineseNatures = [];
 
-        foreach (var item in datasourcefiltered.Natures)
-        {
-            int natureValue = item.Value;
+var chineseStrings = GameInfo.GetStrings("zh-Hans");
 
-            string chineseName =
-                GameInfo.Strings.GetNatureName(
-                    (Nature)natureValue,
-                    LanguageID.ChineseS
-                );
+foreach (var item in datasourcefiltered.Natures)
+{
+    int natureValue = item.Value;
 
-            chineseNatures.Add(
-                new ComboItem(chineseName, natureValue)
-            );
-        }
+    string chineseName =
+        chineseStrings.Natures[natureValue];
 
-        naturepicker.DisplayMemberPath = "Text";
-        naturepicker.ItemSource = chineseNatures;
+    chineseNatures.Add(
+        new ComboItem(chineseName, natureValue)
+    );
+}
+
+naturepicker.DisplayMemberPath = "Text";
+naturepicker.ItemSource = chineseNatures;
 
         abilitypicker.ItemsSource = new List<ComboItem>();
 
