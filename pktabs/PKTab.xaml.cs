@@ -46,7 +46,7 @@ public partial class MainPage : ContentPage
 
         var OpenTrash = new TapGestureRecognizer() { NumberOfTapsRequired = 2 };
         OpenTrash.Tapped += OpenTrashEditor;
-        NicknameLabel.GestureRecognizers.Add(OpenTrash;
+        NicknameLabel.GestureRecognizers.Add(OpenTrash);
 
         ICommand refreshCommand = new Command(async () =>
         {
@@ -72,14 +72,33 @@ public partial class MainPage : ContentPage
                 (int)LanguageID.ChineseS
             );
 
-            chineseSpecies.Add(new ComboItem(chineseName, item.Value));
+            chineseSpecies.Add(
+                new ComboItem(chineseName, item.Value)
+            );
         }
 
         specieslabel.ItemSource = chineseSpecies;
 
-        // 性格暂时保持原来的数据
+        // 性格列表：使用 PKHeX Core 自带的简体中文名称
+        List<ComboItem> chineseNatures = [];
+
+        foreach (var item in datasourcefiltered.Natures)
+        {
+            int natureValue = item.Value;
+
+            string chineseName =
+                GameInfo.Strings.GetNatureName(
+                    (Nature)natureValue,
+                    LanguageID.ChineseS
+                );
+
+            chineseNatures.Add(
+                new ComboItem(chineseName, natureValue)
+            );
+        }
+
         naturepicker.DisplayMemberPath = "Text";
-        naturepicker.ItemSource = (IList)datasourcefiltered.Natures;
+        naturepicker.ItemSource = chineseNatures;
 
         abilitypicker.ItemsSource = new List<ComboItem>();
 
@@ -87,8 +106,9 @@ public partial class MainPage : ContentPage
         {
             statnaturepicker.IsVisible = true;
             Lab_StatNature.IsVisible = true;
+
             statnaturepicker.DisplayMemberPath = "Text";
-            statnaturepicker.ItemSource = (IList)datasourcefiltered.Natures;
+            statnaturepicker.ItemSource = chineseNatures;
         }
 
         helditempicker.DisplayMemberPath = "Text";
@@ -104,7 +124,12 @@ public partial class MainPage : ContentPage
 
         foreach (var item in Enum.GetValues<LanguageID>())
         {
-            languageSource.Add(new ComboItem($"{(LanguageID)item}", (int)item));
+            languageSource.Add(
+                new ComboItem(
+                    $"{(LanguageID)item}",
+                    (int)item
+                )
+            );
         }
 
         languagepicker.ItemDisplayBinding = new Binding("Text");
@@ -171,8 +196,6 @@ public partial class MainPage : ContentPage
             EncounterTypeGroup.Mystery,
             EncounterTypeGroup.Egg
         ];
-
-        //TrainerSettings.DefaultOT = PluginSettings.DefaultOT;
 
         EncounterEvent.RefreshMGDB();
 
@@ -385,7 +408,7 @@ public partial class MainPage : ContentPage
             {
                 await DisplayAlertAsync(
                     "Fail",
-                    "Battle Box slots prevent loading of Box data.",
+                    "Failed to import",
                     "cancel"
                 );
 
@@ -523,7 +546,6 @@ public partial class MainPage : ContentPage
         if (pkm.IsShiny)
             shinybutton.Text = "★";
 
-        // 按宝可梦编号选择中文名称，不再通过英文名称匹配
         var speciesSource = specieslabel.ItemSource;
 
         if (speciesSource is not null)
@@ -566,17 +588,33 @@ public partial class MainPage : ContentPage
                 pkm.PersonalInfo.EXPGrowth
             )}";
 
+        // 普通性格：按照数值选择中文性格
+        var natureItem =
+            naturepicker.ItemSource?
+                .Cast<ComboItem>()
+                .FirstOrDefault(
+                    z => z.Value == (int)pkm.Nature
+                );
+
         naturepicker.SelectedItem =
-            datasourcefiltered.Natures.FirstOrDefault(
-                z => z.Value == (int)pkm.Nature
-            )
-            ?? new ComboItem("Hardy", 0);
+            natureItem
+            ?? naturepicker.ItemSource?
+                .Cast<ComboItem>()
+                .FirstOrDefault(z => z.Value == 0);
+
+        // 能力修正性格：按照数值选择中文性格
+        var statNatureItem =
+            statnaturepicker.ItemSource?
+                .Cast<ComboItem>()
+                .FirstOrDefault(
+                    z => z.Value == (int)pkm.StatAlignment
+                );
 
         statnaturepicker.SelectedItem =
-            datasourcefiltered.Natures.FirstOrDefault(
-                z => z.Value == (int)pkm.StatAlignment
-            )
-            ?? new ComboItem("Hardy", 0);
+            statNatureItem
+            ?? statnaturepicker.ItemSource?
+                .Cast<ComboItem>()
+                .FirstOrDefault(z => z.Value == 0);
 
         iseggcheck.IsChecked = pkm.IsEgg;
         infectedcheck.IsChecked = pkm.IsPokerusInfected;
