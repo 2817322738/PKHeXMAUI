@@ -3,10 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:l="clr-namespace:PKHeXMAUI"
              x:Class="PKHeXMAUI.PKHeXSettings"
-             Title="PKHeXSettings">
+             Title="PKHeX 设置">
     <ScrollView>
-    <VerticalStackLayout x:Name="Stack_PKHeXSettings">
-        <Picker x:Name="SaveVersionPicker" Title="Current Save" SelectedIndexChanged="applynewsave"></Picker>
-    </VerticalStackLayout>
+        <VerticalStackLayout x:Name="Stack_PKHeXSettings">
+            <Picker x:Name="SaveVersionPicker"
+                    Title="当前存档"
+                    SelectedIndexChanged="applynewsave">
+            </Picker>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
