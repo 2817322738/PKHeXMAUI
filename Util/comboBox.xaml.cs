@@ -5,232 +5,522 @@ using Microsoft.Maui.Platform;
 using PKHeX.Core;
 using System.Collections;
 using System.Globalization;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PKHeXMAUI;
+
 /// <summary>
 /// Custom Combo Box control that allows setting a generic ItemSource.
 /// </summary>
 public partial class comboBox : Microsoft.Maui.Controls.ContentView
 {
-    ///<summary>Bindable property for <see cref="DisplayMemberPath"/></summary>
-    public static BindableProperty DisplayMemberPathProperty = BindableProperty.Create(nameof(DisplayMemberPath), typeof(string), typeof(comboBox),".",propertyChanged:OnItemsCollectionChanged);
-    /// <summary>Bindable property for <see cref="ItemSource"/> </summary>
-    public static BindableProperty ItemSourceProperty = BindableProperty.Create(nameof(ItemSource), typeof(IEnumerable), typeof(comboBox),new List<object>(), propertyChanged:OnItemsCollectionChanged);
-    /// <summary>Bindable property for <see cref="Title"/> </summary>
-    public static BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(comboBox));
-    /// <summary>Bindable property for <see cref="Placeholder"/></summary>
-    public static BindableProperty PlaceholderProperty = BindableProperty.Create(nameof(Placeholder), typeof(string), typeof(comboBox));
-    ///<summary>Bindable property for <see cref="SelectedItem"/></summary>
-    public static BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(comboBox), null, BindingMode.TwoWay, propertyChanged: SetSelectedItem);
-    /// <summary>Bindable property for <see cref="SelectedIndex"/> </summary>
-    public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(comboBox),-1,propertyChanged: SetSelectedIndex);
-    /// <summary>Bindable property for <see cref="SelectedIndex"/> </summary>
+    /// <summary>
+    /// Bindable property for DisplayMemberPath.
+    /// </summary>
+    public static BindableProperty DisplayMemberPathProperty =
+        BindableProperty.Create(
+            nameof(DisplayMemberPath),
+            typeof(string),
+            typeof(comboBox),
+            ".",
+            propertyChanged: OnItemsCollectionChanged);
+
+    /// <summary>
+    /// Bindable property for ItemSource.
+    /// </summary>
+    public static BindableProperty ItemSourceProperty =
+        BindableProperty.Create(
+            nameof(ItemSource),
+            typeof(IEnumerable),
+            typeof(comboBox),
+            new List<object>(),
+            propertyChanged: OnItemsCollectionChanged);
+
+    /// <summary>
+    /// Bindable property for Title.
+    /// </summary>
+    public static BindableProperty TitleProperty =
+        BindableProperty.Create(
+            nameof(Title),
+            typeof(string),
+            typeof(comboBox));
+
+    /// <summary>
+    /// Bindable property for Placeholder.
+    /// </summary>
+    public static BindableProperty PlaceholderProperty =
+        BindableProperty.Create(
+            nameof(Placeholder),
+            typeof(string),
+            typeof(comboBox));
+
+    /// <summary>
+    /// Bindable property for SelectedItem.
+    /// </summary>
+    public static BindableProperty SelectedItemProperty =
+        BindableProperty.Create(
+            nameof(SelectedItem),
+            typeof(object),
+            typeof(comboBox),
+            null,
+            BindingMode.TwoWay,
+            propertyChanged: SetSelectedItem);
+
+    /// <summary>
+    /// Bindable property for SelectedIndex.
+    /// </summary>
+    public static BindableProperty SelectedIndexProperty =
+        BindableProperty.Create(
+            nameof(SelectedIndex),
+            typeof(int),
+            typeof(comboBox),
+            -1,
+            propertyChanged: SetSelectedIndex);
+
     public event EventHandler? SelectedIndexChanged;
     public event EventHandler? TextChanged;
-   /// <summary>Gets or sets the Binding Path for displaying the object. Default is ".". This is a bindable Property. </summary>
-    public string DisplayMemberPath { get => (string)GetValue(DisplayMemberPathProperty); set { SetValue(DisplayMemberPathProperty, value); } }
-    /// <summary>Gets or sets the Title of the comboBox. This is a bindable property. Default is null.</summary>
-	public string Title { get => (string)GetValue(TitleProperty);set=> SetValue(TitleProperty, value); }
+
     /// <summary>
-    /// the string representation of the items in <see cref="ItemSource"/>
+    /// Gets or sets the Binding Path for displaying the object.
+    /// </summary>
+    public string DisplayMemberPath
+    {
+        get => (string)GetValue(DisplayMemberPathProperty);
+        set => SetValue(DisplayMemberPathProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the Title.
+    /// </summary>
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    /// <summary>
+    /// String representation of the items in ItemSource.
     /// </summary>
     public IList<string> Items = [];
+
     /// <summary>
-    /// Gets or sets the ItemSource Property of the comboBox. Default is null. This is a bindable property.
+    /// Gets or sets the ItemSource.
     /// </summary>
-    public IList ItemSource { get =>(IList)GetValue(ItemSourceProperty); set =>SetValue(ItemSourceProperty, value); }
+    public IList ItemSource
+    {
+        get => (IList)GetValue(ItemSourceProperty);
+        set => SetValue(ItemSourceProperty, value);
+    }
+
     /// <summary>
-    /// Gets or sets the Placeholder property of the comboBox. Default is null. This is a bindable property.
+    /// Gets or sets the Placeholder.
     /// </summary>
-    public string Placeholder { get => (string)GetValue(PlaceholderProperty); set => SetValue(PlaceholderProperty, value); }
+    public string Placeholder
+    {
+        get => (string)GetValue(PlaceholderProperty);
+        set => SetValue(PlaceholderProperty, value);
+    }
+
     /// <summary>
-    /// Gets or sets the index of the Selected Item in the comboBox. Default is null. This is a bindable property.
+    /// Gets or sets the selected index.
     /// </summary>
-	public int SelectedIndex { get=>(int)GetValue(SelectedIndexProperty); set =>  SetValue(SelectedIndexProperty, value); }
+    public int SelectedIndex
+    {
+        get => (int)GetValue(SelectedIndexProperty);
+        set => SetValue(SelectedIndexProperty, value);
+    }
+
     /// <summary>
-    /// Gets or sets the selected item in the comboBox. Default is null. This is a bindable property.
+    /// Gets or sets the selected item.
     /// </summary>
-	public object? SelectedItem { get => GetValue(SelectedItemProperty); set { picker.SelectedItem = value; SetValue(SelectedItemProperty, value); } }
+    public object? SelectedItem
+    {
+        get => GetValue(SelectedItemProperty);
+        set
+        {
+            picker.SelectedItem = value;
+            SetValue(SelectedItemProperty, value);
+        }
+    }
+
     public CollectionView picker;
+
     public comboBox()
     {
         InitializeComponent();
-        picker = new()
+
+        picker = new CollectionView
         {
             BackgroundColor = Colors.White
         };
+
         picker.SelectionChanged += IndexChanged;
         picker.HeightRequest = 50;
         picker.SelectionMode = SelectionMode.Single;
-        picker.SetBinding(Microsoft.Maui.Controls.CollectionView.ItemsSourceProperty, new Binding("ItemSource", source: ThisView));
+
+        picker.SetBinding(
+            Microsoft.Maui.Controls.CollectionView.ItemsSourceProperty,
+            new Binding("ItemSource", source: ThisView));
+
         picker.ItemTemplate = new DataTemplate(() =>
         {
             Grid cell = [];
             Label label = new();
-            label.SetBinding(Label.TextProperty, new Binding(DisplayMemberPath));
+
+            label.SetBinding(
+                Label.TextProperty,
+                new Binding(DisplayMemberPath));
+
+            label.SetBinding(
+                Label.BackgroundColorProperty,
+                new Binding(
+                    "Valid",
+                    converter: new BoolToColorConverter()));
+
             label.TextColor = Colors.Black;
-            picker.ItemTemplate = new DataTemplate(() =>
-            {
-                Grid cell = [];
-                Label label = new();
-                label.SetBinding(Label.TextProperty, new Binding(DisplayMemberPath));
-                label.SetBinding(Label.BackgroundColorProperty, new Binding("Valid", converter: new BoolToColorConverter()));
-                label.TextColor = Colors.Black;
-                cell.Add(label);
-                return cell;
-            });
+
             cell.Add(label);
             return cell;
         });
+
 #if ANDROID
         entry.Unfocused += (s, e) => popupWindow.Dismiss();
 #endif
+
         picker.ZIndex = 1;
     }
-    static void OnItemsCollectionChanged(BindableObject bindable, object oldValue, object newValue)
+
+    static void OnItemsCollectionChanged(
+        BindableObject bindable,
+        object oldValue,
+        object newValue)
     {
-        ((comboBox)bindable).OnItemsCollectionChanged(bindable,EventArgs.Empty);
+        ((comboBox)bindable)
+            .OnItemsCollectionChanged(bindable, EventArgs.Empty);
     }
+
     public void OnItemsCollectionChanged(object sender, EventArgs e)
     {
-        if (ItemSource is null) return;
+        if (ItemSource is null)
+            return;
+
         Items.Clear();
+
         foreach (var item in ItemSource)
         {
             Items.Add(GetDisplayMember(item));
         }
     }
+
     private string GetDisplayMember(object item)
     {
         if (DisplayMemberPath == ".")
         {
-            if (item is not null)
-            {
-                return item.ToString()??"";
-            }
-
-            return string.Empty;
+            return item?.ToString() ?? "";
         }
-        var result = (item.GetType().GetProperty(DisplayMemberPath)?.GetValue(item))?.ToString();
+
+        var property = item
+            .GetType()
+            .GetProperty(DisplayMemberPath);
+
+        var result = property?.GetValue(item)?.ToString();
+
         return result ?? "";
     }
+
     /// <summary>
-    /// Filter's the items in the ListView based on the text in the entry.
+    /// Filters the items based on the text entered by the user.
+    ///
+    /// Supports:
+    /// - Chinese names
+    /// - English names when present
+    /// - Partial name search
+    /// - ComboItem numeric Value search
     /// </summary>
-    /// <param name="sender">the object calling the event</param>
-    /// <param name="e">Event args</param>
-    private void entry_textChanged(object sender, TextChangedEventArgs e)
+    private void entry_textChanged(
+        object sender,
+        TextChangedEventArgs e)
     {
-        if (picker.ItemsSource is null) return;
+        if (ItemSource is null)
+            return;
+
 #if ANDROID
-        if (popupWindow?.IsShowing == false) ShowDropdown();
+        if (popupWindow?.IsShowing == false)
+            ShowDropdown();
 #endif
-        if (entry.Text.Length == 8)
+
+        string searchText = entry.Text?.Trim() ?? "";
+
+        // Empty input: show everything.
+        if (string.IsNullOrEmpty(searchText))
         {
-            List<ComboItem> filteredlist = [];
-            var hex = (int)Util.GetHexValue(entry.Text);
+            picker.ItemsSource =
+                ItemSource.Cast<object>().ToList();
+
+            TextChanged?.Invoke(this, e);
+            return;
+        }
+
+        // Special handling for 8-character hexadecimal input.
+        if (searchText.Length == 8)
+        {
+            int hex = (int)Util.GetHexValue(searchText);
+
             if (hex != 0)
             {
-                // Input is hexadecimal number, select the item
-                filteredlist = [BlockEditor8.SortedBlockKeys.ToList().Find(z => z.Value == hex) ?? new ComboItem("Error", 0)];
-                picker.ItemsSource = filteredlist;
+                var result =
+                    BlockEditor8.SortedBlockKeys
+                        .ToList()
+                        .Find(z => z.Value == hex);
+
+                if (result is not null)
+                {
+                    picker.ItemsSource = new List<ComboItem>
+                    {
+                        result
+                    };
+
+                    TextChanged?.Invoke(this, e);
+                    return;
+                }
+            }
+        }
+
+        // Numeric search.
+        //
+        // Example:
+        // 6   -> Pokémon #6
+        // 006 -> Pokémon #6
+        // 25  -> Pokémon #25
+        //
+        if (int.TryParse(searchText, out int number))
+        {
+            var numericResults = ItemSource
+                .Cast<object>()
+                .Where(item =>
+                    item is ComboItem combo &&
+                    combo.Value == number)
+                .ToList();
+
+            if (numericResults.Count > 0)
+            {
+                picker.ItemsSource = numericResults;
+
+                TextChanged?.Invoke(this, e);
                 return;
             }
         }
-        IList tempsource = Items.Where(z=>z.StartsWith(entry.Text,StringComparison.OrdinalIgnoreCase)).ToList();
-        picker.ItemsSource = ItemSource.Cast<object>().Where(z => tempsource.Contains(z.GetType().GetProperty(DisplayMemberPath) is null?z.ToString():z.GetType().GetProperty(DisplayMemberPath)?.GetValue(z)?.ToString())).ToList();
+
+        // Text search.
+        //
+        // Contains() instead of StartsWith():
+        // 输入“火龙”也可以找到“喷火龙”。
+        var filtered = ItemSource
+            .Cast<object>()
+            .Where(item =>
+            {
+                string text = GetDisplayMember(item);
+
+                return text.Contains(
+                    searchText,
+                    StringComparison.CurrentCultureIgnoreCase);
+            })
+            .ToList();
+
+        picker.ItemsSource = filtered;
+
         TextChanged?.Invoke(this, e);
     }
+
     private string SelectedItemText = "";
+
     /// <summary>
-    /// Changes the displayed text in the entry control, calls the bindable SelectedIndexChanged Event
+    /// Changes the selected item.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void IndexChanged(object? sender, EventArgs? e)
+    private void IndexChanged(
+        object? sender,
+        EventArgs? e)
     {
-        if (picker.SelectedItem.GetType().GetProperty(DisplayMemberPath) is null)
-            SelectedItemText = picker.SelectedItem.ToString()??"";
-        else
-            SelectedItemText = picker.SelectedItem.GetType().GetProperty(DisplayMemberPath)?.GetValue(picker.SelectedItem)?.ToString()??"";
+        if (picker.SelectedItem is null)
+            return;
+
+        SelectedItemText =
+            GetDisplayMember(picker.SelectedItem);
 
         entry.Text = SelectedItemText;
+
         SelectedItem = picker.SelectedItem;
-        SelectedIndex = ItemSource.Cast<object>().ToList().IndexOf(SelectedItem);
+
+        SelectedIndex =
+            ItemSource
+                .Cast<object>()
+                .ToList()
+                .IndexOf(SelectedItem);
+
         SelectedIndexChanged?.Invoke(this, e!);
+
 #if ANDROID
         popupWindow?.Dismiss();
 #endif
     }
-    public void ForceSelection(object? sender, EventArgs? e) => picker.SelectedItem = SelectedItem;
-    static void SetSelectedItem(BindableObject bindable, object oldValue, object newValue)
+
+    public void ForceSelection(
+        object? sender,
+        EventArgs? e)
+    {
+        picker.SelectedItem = SelectedItem;
+    }
+
+    static void SetSelectedItem(
+        BindableObject bindable,
+        object oldValue,
+        object newValue)
     {
         ((comboBox)bindable).SetSelectedItem(newValue);
     }
-    public void SetSelectedItem(object value) => picker.SelectedItem = value;
-    static void SetSelectedIndex(BindableObject bindable, object oldValue, object newValue)
+
+    public void SetSelectedItem(object? value)
     {
-        if ((int)newValue < 0) return;
-        var lv = (comboBox)bindable;
-        lv.SelectedItem = lv.ItemSource.Cast<object>().ToList()[(int)newValue];
+        picker.SelectedItem = value;
+
+        if (value is not null)
+        {
+            entry.Text = GetDisplayMember(value);
+        }
     }
+
+    static void SetSelectedIndex(
+        BindableObject bindable,
+        object oldValue,
+        object newValue)
+    {
+        if ((int)newValue < 0)
+            return;
+
+        var lv = (comboBox)bindable;
+
+        var items = lv.ItemSource
+            .Cast<object>()
+            .ToList();
+
+        int index = (int)newValue;
+
+        if (index >= 0 && index < items.Count)
+        {
+            lv.SelectedItem = items[index];
+        }
+    }
+
     /// <summary>
-    /// Hides the dropdown List for the comboBox
+    /// Hides the dropdown list.
     /// </summary>
     public void HideList()
     {
-        #if ANDROID
-        popupWindow.Dismiss();
-      #endif
+#if ANDROID
+        popupWindow?.Dismiss();
+#endif
     }
+
     /// <summary>
-    /// Shows the dropdown List for the comboBox
+    /// Shows the dropdown list.
     /// </summary>
     public void ShowList()
     {
         ShowDropdown();
     }
-    private void ShowList(object sender, FocusEventArgs e)
+
+    private void ShowList(
+        object sender,
+        FocusEventArgs e)
     {
         ShowDropdown();
     }
-    private void ClearText(object sender, EventArgs e)
+
+    private void ClearText(
+        object sender,
+        EventArgs e)
     {
         entry.Text = string.Empty;
+
         if (!entry.IsFocused)
             entry.Focus();
     }
-    private void AutoCompleteText(object sender, EventArgs e)
+
+    /// <summary>
+    /// Automatically selects an item when the user presses Enter.
+    ///
+    /// Supports both numeric Value and displayed text.
+    /// </summary>
+    private void AutoCompleteText(
+        object sender,
+        EventArgs e)
     {
-        IList tempsource = Items.Where(z => z.Contains(entry.Text, StringComparison.CurrentCultureIgnoreCase)).ToList();
-        var item = ItemSource.Cast<object>().FirstOrDefault(z => tempsource.Contains(z.GetType().GetProperty(DisplayMemberPath) is null ? z.ToString() : z.GetType().GetProperty(DisplayMemberPath)?.GetValue(z)?.ToString() ?? ""))??"";
-        if (item.GetType().GetProperty(DisplayMemberPath) is null)
-            SelectedItemText = picker.SelectedItem?.ToString() ?? "";
-        else
-            SelectedItemText = item.GetType().GetProperty(DisplayMemberPath)?.GetValue(item)?.ToString() ?? "";
-        entry.Text = SelectedItemText;
+        string searchText =
+            entry.Text?.Trim() ?? "";
+
+        if (string.IsNullOrEmpty(searchText))
+            return;
+
+        object? item = null;
+
+        // First try numeric search.
+        if (int.TryParse(searchText, out int number))
+        {
+            item = ItemSource
+                .Cast<object>()
+                .FirstOrDefault(x =>
+                    x is ComboItem combo &&
+                    combo.Value == number);
+        }
+
+        // Then try text search.
+        item ??= ItemSource
+            .Cast<object>()
+            .FirstOrDefault(x =>
+                GetDisplayMember(x).Contains(
+                    searchText,
+                    StringComparison.CurrentCultureIgnoreCase));
+
+        if (item is null)
+            return;
+
+        SelectedItem = item;
         picker.SelectedItem = item;
+
+        SelectedItemText = GetDisplayMember(item);
+
+        entry.Text = SelectedItemText;
     }
+
 #if ANDROID
     private PopupWindow popupWindow = new();
 #endif
+
     /// <summary>
-    /// Shows the dropdown Listview. Currently for Android Only. To-Do: All Other Platforms.
+    /// Shows the dropdown list.
+    /// Currently for Android only.
     /// </summary>
     private void ShowDropdown()
     {
 #if ANDROID
-        if (this.Handler?.MauiContext == null) { return; }
-        popupWindow?.Dismiss();
-        var contentView = picker.ToPlatform(this.Handler.MauiContext);
+        if (this.Handler?.MauiContext == null)
+            return;
 
-        popupWindow = new(contentView, (int)(this.Width * 2), 300)
+        popupWindow?.Dismiss();
+
+        var contentView =
+            picker.ToPlatform(this.Handler.MauiContext);
+
+        popupWindow = new PopupWindow(
+            contentView,
+            (int)(this.Width * 2),
+            300)
         {
             OutsideTouchable = true
         };
 
-        var parentView = this.entry.ToPlatform(this.Handler.MauiContext);
+        var parentView =
+            this.entry.ToPlatform(this.Handler.MauiContext);
+
         popupWindow.ShowAsDropDown(parentView);
 #endif
     }
@@ -238,13 +528,25 @@ public partial class comboBox : Microsoft.Maui.Controls.ContentView
 
 internal class BoolToColorConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture)
     {
-        if (value is null) return Colors.White;
-        return (bool)value ? Colors.Green : Colors.White;
+        if (value is null)
+            return Colors.White;
+
+        return (bool)value
+            ? Colors.Green
+            : Colors.White;
     }
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object? ConvertBack(
+        object? value,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture)
     {
         throw new NotImplementedException();
     }
