@@ -2,23 +2,23 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PKHeXMAUI.SaveEditors"
-             Title="Save Editors">
+             Title="存档编辑器">
     <VerticalStackLayout>
-        <Button x:Name="Button_BlockData" Text="Block Data" Clicked="OpenBlockEditor" IsVisible="false"/>
-        <Button x:Name="Button_RTCEditor" Text="Clock (RTC)" Clicked="OpenRTCEditor" IsVisible="false"/>
-        <Button x:Name="Button_EventFlags1" Text="Event Flags" Clicked="OpenEventFlagEditor" IsVisible="False"/>
-        <Button Text="Inventory Editor" Clicked="OpenItems"/>
-        <Button x:Name="Button_Pokedex1" Text="Pokedex" Clicked="OpenSimplePokedex" IsVisible="False"/>
-        <Button x:Name="TrainerInfoButton" Text="Trainer Info" IsVisible="false" Clicked="OpenTrainerEditor"/>
-        <Button x:Name="MailBoxButton" Text="Mail Box" IsVisible="False" Clicked="OpenMailBoxEditor"/>
-        <Button x:Name="GSBallButton" Text="Enable GS Ball Event(Virtual Console)" IsVisible="False" Clicked="EnableGSBallEvent"/>
-        <Button x:Name="B_Misc" Text="Misc" IsVisible="False" Clicked="OpenMiscEditor"/>
-        <Button x:Name="B_Roamer" Text="Roamer" IsVisible="False" Clicked="OpenRoamerEditor"/>
-        <Button x:Name="B_Chatter" Text="Chatter" IsVisible="False" Clicked="OpenChatterEditor"/>
-        <Button x:Name="B_Geonet" Text="Geonet" IsVisible="False" Clicked="B_Geonet_Clicked"/>
-        <Button x:Name="B_HoneyTree" Text="Honey Tree" IsVisible="False" Clicked="B_HoneyTree_Clicked"/>
-        <Button x:Name="B_WonderCard" Text="Wonder Card" IsVisible="False" Clicked="B_WonderCard_Clicked"/>
-        <Button x:Name="B_Underground" Text="Underground" IsVisible="False" Clicked="B_Underground_Clicked"/>
-        <Button x:Name="B_HallofFame" Text="Hall of Fame" IsVisible="False" Clicked="B_HallofFame_Clicked"/> 
+        <Button x:Name="Button_BlockData" Text="区块数据" Clicked="OpenBlockEditor" IsVisible="false"/>
+        <Button x:Name="Button_RTCEditor" Text="时钟（RTC）" Clicked="OpenRTCEditor" IsVisible="false"/>
+        <Button x:Name="Button_EventFlags1" Text="事件标志" Clicked="OpenEventFlagEditor" IsVisible="False"/>
+        <Button Text="道具编辑器" Clicked="OpenItems"/>
+        <Button x:Name="Button_Pokedex1" Text="图鉴" Clicked="OpenSimplePokedex" IsVisible="False"/>
+        <Button x:Name="TrainerInfoButton" Text="训练家信息" IsVisible="false" Clicked="OpenTrainerEditor"/>
+        <Button x:Name="MailBoxButton" Text="邮箱" IsVisible="False" Clicked="OpenMailBoxEditor"/>
+        <Button x:Name="GSBallButton" Text="启用 GS 球事件（虚拟主机）" IsVisible="False" Clicked="EnableGSBallEvent"/>
+        <Button x:Name="B_Misc" Text="其他" IsVisible="False" Clicked="OpenMiscEditor"/>
+        <Button x:Name="B_Roamer" Text="游走宝可梦" IsVisible="False" Clicked="OpenRoamerEditor"/>
+        <Button x:Name="B_Chatter" Text="口头禅" IsVisible="False" Clicked="OpenChatterEditor"/>
+        <Button x:Name="B_Geonet" Text="全球地理网络" IsVisible="False" Clicked="B_Geonet_Clicked"/>
+        <Button x:Name="B_HoneyTree" Text="甜甜蜜树" IsVisible="False" Clicked="B_HoneyTree_Clicked"/>
+        <Button x:Name="B_WonderCard" Text="神秘礼物卡" IsVisible="False" Clicked="B_WonderCard_Clicked"/>
+        <Button x:Name="B_Underground" Text="地下世界" IsVisible="False" Clicked="B_Underground_Clicked"/>
+        <Button x:Name="B_HallofFame" Text="名人堂" IsVisible="False" Clicked="B_HallofFame_Clicked"/> 
     </VerticalStackLayout>
 </ContentPage>
