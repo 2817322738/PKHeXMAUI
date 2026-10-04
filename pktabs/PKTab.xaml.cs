@@ -558,8 +558,8 @@ helditempicker.ItemSource = chineseItems;
 
         itemsprite.IsVisible = false;
 
-        if (pkm.IsShiny)
-            shinybutton.Text = "★";
+        shinybutton.Text = pkm.IsShiny ? "★" : "☆";
+shinybutton.IsEnabled = true;
 
         var speciesSource = specieslabel.ItemSource;
 
@@ -1018,19 +1018,17 @@ helditempicker.ItemSource = chineseItems;
     }
 
     private void turnshiny(object sender, EventArgs e)
-    {
-        if (!pk.IsShiny)
-        {
-            pk.SetIsShiny(true);
-            shinybutton.Text = "★";
-            shinybutton.IsEnabled = false;
-        }
+{
+    pk.SetIsShiny(!pk.IsShiny);
 
-        displaypid.Text =
-            $"{pk.PID:X}";
+    shinybutton.Text = pk.IsShiny ? "★" : "☆";
+    shinybutton.IsEnabled = true;
 
-        checklegality();
-    }
+    displaypid.Text =
+        $"{pk.PID:X}";
+
+    checklegality();
+}
 
     private void applyexp(
         object sender,
