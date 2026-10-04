@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:l="clr-namespace:PKHeXMAUI"
              x:Class="PKHeXMAUI.StatsTab"
-             Title="Stats">
+             Title="能力">
     <RefreshView x:Name="StatsRefresh">
         <ScrollView>
 
@@ -28,6 +28,7 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
@@ -37,111 +38,593 @@
                 <ColumnDefinition Width="50"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
+
             <Image Grid.Column="0" Grid.Row="0"
                 x:FieldModifier="Public"
                 x:Name="statpic"
                 Source="iconp.png"
                 HeightRequest="50"
-                 Grid.ColumnSpan="2"
+                Grid.ColumnSpan="2"
+                HorizontalOptions="Start"
+                VerticalOptions="Start"
+            />
+
+            <Image Source="rare_icon.png"
+                   Grid.Column="0"
+                   Grid.Row="0"
+                   Grid.ColumnSpan="2"
+                   x:Name="shinysparklessprite"
+                   HeightRequest="16"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start"/>
+
+            <Image Source="a_egg.png"
+                   Grid.Column="0"
+                   Grid.Row="0"
+                   x:Name="eggsprite"
+                   HeightRequest="40"
                    HorizontalOptions="Start"
-                   VerticalOptions="Start"
-                />
-            <Image Source="rare_icon.png" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" x:Name="shinysparklessprite" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Start"/>
-            <Image Source="a_egg.png" Grid.Column="0" Grid.Row="0" x:Name="eggsprite" HeightRequest="40" HorizontalOptions="Start" VerticalOptions="End" IsVisible="false"/>
-            <Image Grid.Column="0" Grid.Row="0" x:Name="itemsprite" Grid.ColumnSpan="2" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="End" IsVisible="false"/>
-            <!--IVS/EVS-->
-            <Label Text="Base" Grid.Row="1" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <Label Grid.Row="1" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" Text="IVs"/>
-            <Label x:Name="EvLabel" Grid.Row="1" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" Text="EVs"/>
-            <Label IsVisible="false" x:Name="gvlabel" Grid.Row="1" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" Text="GVs"/>
-            <Label Grid.Row="1" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" Text="Stats" x:Name="statslabel"/>
-            <Label Grid.Row="1" Grid.Column="6"  HorizontalOptions="Start" VerticalOptions="Center" Text="Hyper" x:Name="hyperlabel"/>
-            <!--HP-->
-            <Label Grid.Row="2" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" Text="HP:"/>
-            <Editor IsReadOnly="True" Grid.Row="2" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" x:Name="hpbasedisplay"/>
-            <Editor Grid.Row="2" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" x:Name="HPIV" TextChanged="applyhpIV" Keyboard="Numeric"/>
-            <Editor Grid.Row="2" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" x:Name="HPEV" TextChanged="applyhpEV" Keyboard="Numeric"/>
-                <Editor IsVisible="false" Grid.Row="2" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" x:Name="HPGV" TextChanged="applyhpGV" Keyboard="Numeric"/>
-            <Editor IsReadOnly="True" Grid.Row="2" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalhpdisplay"/>
-            <CheckBox Grid.Row="2" Grid.Column="6" HorizontalOptions="Center" VerticalOptions="Center" x:Name="hpHyper" CheckedChanged="applyHPhyper"/>
-            <!--ATK-->
-            <Label Grid.Row="3" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" Text="Atk:"/>
-            <Editor IsReadOnly="True" Grid.Row="3" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" x:Name="atkbasedisplay"/>
-                <Editor Grid.Row="3" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" x:Name="AtkIV" TextChanged="applyatkIV" Keyboard="Numeric"/>
-                <Editor Grid.Row="3" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" x:Name="AtkEV" TextChanged="applyatkEV" Keyboard="Numeric"/>
-                <Editor IsVisible="false" Grid.Row="3" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" x:Name="AtkGV" TextChanged="applyatkGV" Keyboard="Numeric"/>
-            <Editor IsReadOnly="True" Grid.Row="3" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalatkdisplay"/>
-            <CheckBox Grid.Row="3" Grid.Column="6" HorizontalOptions="Center" VerticalOptions="Center" x:Name="ATKHyper" CheckedChanged="applyATKhyper"/>
-            <!--DEF-->
-            <Label Grid.Row="4" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" Text="Def:"/>
-            <Editor IsReadOnly="True" Grid.Row="4" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" x:Name="defbasedisplay"/>
-                <Editor Grid.Row="4" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" x:Name="DEFIV" TextChanged="applydefIV" Keyboard="Numeric"/>
-                <Editor Grid.Row="4" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" x:Name="DEFEV" TextChanged="applydefEV" Keyboard="Numeric"/>
-                <Editor IsVisible="false" Grid.Row="4" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" x:Name="DEFGV" TextChanged="applydefGV" Keyboard="Numeric"/>
-            <Editor IsReadOnly="True" Grid.Row="4" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totaldefdisplay"/>
-            <CheckBox Grid.Row="4" Grid.Column="6" HorizontalOptions="Center" VerticalOptions="Center" x:Name="DEFHyper" CheckedChanged="applyDEFhyper"/>
-            <!--SPA-->
-            <Label Grid.Row="5" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" Text="SpA:"/>
-            <Editor IsReadOnly="True" Grid.Row="5" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" x:Name="spabasedisplay"/>
-                <Editor Grid.Row="5" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPAIV" TextChanged="applyspaIV" Keyboard="Numeric"/>
-                <Editor Grid.Row="5" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPAEV" TextChanged="applyspaEV" Keyboard="Numeric"/>
-                <Editor IsVisible="false" Grid.Row="5" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPAGV" TextChanged="applyspaGV" Keyboard="Numeric"/>
-            <Editor IsReadOnly="True" Grid.Row="5" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalspadisplay"/>
-            <CheckBox Grid.Row="5" Grid.Column="6" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPAHyper" CheckedChanged="applySPAhyper"/>
-            <!--SPD-->
-            <Label Grid.Row="6" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" Text="SpD:"/>
-            <Editor IsReadOnly="True" Grid.Row="6" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" x:Name="spdbasedisplay"/>
-                <Editor Grid.Row="6" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPDIV" TextChanged="applyspdIV" Keyboard="Numeric"/>
-                <Editor Grid.Row="6" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPDEV" TextChanged="applyspdEV" Keyboard="Numeric"/>
-                <Editor IsVisible="false" Grid.Row="6" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPDGV" TextChanged="applyspdGV" Keyboard="Numeric"/>
-            <Editor IsReadOnly="True" Grid.Row="6" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalspddisplay"/>
-            <CheckBox Grid.Row="6" Grid.Column="6" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPDHyper" CheckedChanged="applySPDhyper"/>
-            <!--SPE-->
-            <Label Grid.Row="7" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" Text="Spe:"/>
-            <Editor IsReadOnly="True" Grid.Row="7" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" x:Name="spebasedisplay"/>
-                <Editor Grid.Row="7" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPEIV" TextChanged="applyspeIV" Keyboard="Numeric"/>
-                <Editor Grid.Row="7" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPEEV" TextChanged="applyspeEV" Keyboard="Numeric"/>
-                <Editor IsVisible="false" Grid.Row="7" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPEGV" TextChanged="applyspeGV" Keyboard="Numeric"/>
-            <Editor IsReadOnly="True" Grid.Row="7" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalspedisplay"/>
-            <CheckBox Grid.Row="7" Grid.Column="6" HorizontalOptions="Center" VerticalOptions="Center" x:Name="SPEHyper" CheckedChanged="applySPEhyper"/>
-            <!--Totals-->
-            <Label Grid.Row="8" Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center" Text="Total:"/>
-            <Editor IsReadOnly="True" Grid.Row="8" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalbasedisplay"/>
-            <Editor IsReadOnly="True" Grid.Row="8" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalIVdisplay"/>
-            <Editor IsReadOnly="True" Grid.Row="8" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center" x:Name="totalEVdisplay"/>
-            <!--Hidden Power-->
-            <Label x:Name="HiddenPLabel" IsVisible="false" Grid.Row="9" Grid.Column="0" Text="Hidden Power" Grid.ColumnSpan="2" HorizontalOptions="Start" VerticalOptions="Center"/>
-            <Picker x:Name="HiddenPowerPicker" IsVisible="false" Grid.Row="9" Grid.Column="2" HorizontalOptions="Start" VerticalOptions="Center" SelectedIndexChanged="applyHiddenPower"/>
-            <!--TeraType-->
-            <Label x:Name="OvTeralabel" IsVisible="false" Grid.Row="9" Grid.Column="0" Text="Override TeraType:" WidthRequest="152" HorizontalOptions="Start" VerticalOptions="Center"></Label>
-            <Picker IsVisible="false" Grid.Row="9" Grid.Column="3" Grid.ColumnSpan="2" HorizontalOptions="End" VerticalOptions="Center" x:Name="Teratypepicker" Title="TeraType" SelectedIndexChanged="applytera"></Picker>
-            <Label x:Name="OrTeralabel" IsVisible="false" Grid.Row="10" Grid.Column="0" Text="Original TeraType:" WidthRequest="152" HorizontalOptions="Start" VerticalOptions="Center"></Label>
-            <Picker IsVisible="false" Grid.Row="10" Grid.Column="3" Grid.ColumnSpan="2" HorizontalOptions="End" VerticalOptions="Center" x:Name="MainTeratypepicker" Title="TeraType" SelectedIndexChanged="applymaintera"></Picker>
-            <Image x:Name="teratypeimage" IsVisible="false" Grid.Row="10" Grid.Column="5" HeightRequest="64" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <!--IVbuttons-->
-            <Button  WidthRequest="150" Grid.Row="11" Grid.Column="1" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="Random IVs" Clicked="randomizeivs" />
-            <Button  WidthRequest="150" Grid.Row="11" Grid.Column="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="Perfect IVs" Clicked="perfectivs"/>
-            <Button x:Name="randomEv"  WidthRequest="150" Grid.Row="12" Grid.Column="1" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="Random EVs" Clicked="randomizeevs"/>
-            <Button x:Name="suggestedEv" WidthRequest="150" Grid.Row="12" Grid.Column="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="Suggested Evs" Clicked="suggestedevs"/>
-            <!--Dynamax-->
-            <Label x:Name="dmaxlabel" IsVisible="false" Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Text="Dynamax Level:"/>
-            <l:NumericUpDown x:Name="dmaxleveleditor" IsVisible="false" Grid.Row="13" Grid.Column="2" ValueChanged="applydmaxlevel" MinValue="0" MaxValue="10"/>
-            <CheckBox x:Name="GmaxCheck" IsVisible="false" Grid.Row="13" Grid.Column="3" CheckedChanged="applygmax"/>
-            <Label x:Name="gmaxlabel" IsVisible="false" Grid.Row="13" Grid.Column="4" Grid.ColumnSpan="2" VerticalOptions="Center" Text="Gigantamax"/>
-            <!--Alpha/Noble-->
-            <CheckBox x:Name="Alphacheck" IsVisible="false" Grid.Row="14" Grid.Column="0"  CheckedChanged="applyalhpastatus"/>
-            <Label x:Name="alphalabel" IsVisible="false" Grid.Row="14" Grid.Column="1" VerticalOptions="Center" Grid.ColumnSpan="2" Text="Alpha"/>
-            <CheckBox x:Name="Noblecheck" IsVisible="false" Grid.Row="14" Grid.Column="3" CheckedChanged="applynoblestatus"/>
-            <Label x:Name="noblelabel" VerticalOptions="Center" IsVisible="false" Grid.Row="14" Grid.Column="4" Grid.ColumnSpan="2" Text="Noble"/>
+                   VerticalOptions="End"
+                   IsVisible="false"/>
 
+            <Image Grid.Column="0"
+                   Grid.Row="0"
+                   x:Name="itemsprite"
+                   Grid.ColumnSpan="2"
+                   HeightRequest="16"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   IsVisible="false"/>
 
+            <!-- 个体值 / 努力值 -->
+            <Label Text="种族值"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
 
+            <Label Grid.Row="1"
+                   Grid.Column="2"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Text="个体值"/>
 
+            <Label x:Name="EvLabel"
+                   Grid.Row="1"
+                   Grid.Column="3"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Text="努力值"/>
 
+            <Label IsVisible="false"
+                   x:Name="gvlabel"
+                   Grid.Row="1"
+                   Grid.Column="4"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Text="遗传值"/>
+
+            <Label Grid.Row="1"
+                   Grid.Column="5"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Text="能力值"
+                   x:Name="statslabel"/>
+
+            <Label Grid.Row="1"
+                   Grid.Column="6"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center"
+                   Text="极限特训"
+                   x:Name="hyperlabel"/>
+
+            <!-- HP -->
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   Text="HP："/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="hpbasedisplay"/>
+
+            <Editor Grid.Row="2"
+                    Grid.Column="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="HPIV"
+                    TextChanged="applyhpIV"
+                    Keyboard="Numeric"/>
+
+            <Editor Grid.Row="2"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="HPEV"
+                    TextChanged="applyhpEV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsVisible="false"
+                    Grid.Row="2"
+                    Grid.Column="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="HPGV"
+                    TextChanged="applyhpGV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="2"
+                    Grid.Column="5"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalhpdisplay"/>
+
+            <CheckBox Grid.Row="2"
+                      Grid.Column="6"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      x:Name="hpHyper"
+                      CheckedChanged="applyHPhyper"/>
+
+            <!-- 攻击 -->
+            <Label Grid.Row="3"
+                   Grid.Column="0"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   Text="攻击："/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="atkbasedisplay"/>
+
+            <Editor Grid.Row="3"
+                    Grid.Column="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="AtkIV"
+                    TextChanged="applyatkIV"
+                    Keyboard="Numeric"/>
+
+            <Editor Grid.Row="3"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="AtkEV"
+                    TextChanged="applyatkEV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsVisible="false"
+                    Grid.Row="3"
+                    Grid.Column="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="AtkGV"
+                    TextChanged="applyatkGV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="3"
+                    Grid.Column="5"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalatkdisplay"/>
+
+            <CheckBox Grid.Row="3"
+                      Grid.Column="6"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      x:Name="ATKHyper"
+                      CheckedChanged="applyATKhyper"/>
+
+            <!-- 防御 -->
+            <Label Grid.Row="4"
+                   Grid.Column="0"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   Text="防御："/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="defbasedisplay"/>
+
+            <Editor Grid.Row="4"
+                    Grid.Column="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="DEFIV"
+                    TextChanged="applydefIV"
+                    Keyboard="Numeric"/>
+
+            <Editor Grid.Row="4"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="DEFEV"
+                    TextChanged="applydefEV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsVisible="false"
+                    Grid.Row="4"
+                    Grid.Column="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="DEFGV"
+                    TextChanged="applydefGV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="4"
+                    Grid.Column="5"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totaldefdisplay"/>
+
+            <CheckBox Grid.Row="4"
+                      Grid.Column="6"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      x:Name="DEFHyper"
+                      CheckedChanged="applyDEFhyper"/>
+
+            <!-- 特攻 -->
+            <Label Grid.Row="5"
+                   Grid.Column="0"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   Text="特攻："/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="spabasedisplay"/>
+
+            <Editor Grid.Row="5"
+                    Grid.Column="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPAIV"
+                    TextChanged="applyspaIV"
+                    Keyboard="Numeric"/>
+
+            <Editor Grid.Row="5"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPAEV"
+                    TextChanged="applyspaEV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsVisible="false"
+                    Grid.Row="5"
+                    Grid.Column="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPAGV"
+                    TextChanged="applyspaGV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="5"
+                    Grid.Column="5"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalspadisplay"/>
+
+            <CheckBox Grid.Row="5"
+                      Grid.Column="6"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      x:Name="SPAHyper"
+                      CheckedChanged="applySPAhyper"/>
+
+            <!-- 特防 -->
+            <Label Grid.Row="6"
+                   Grid.Column="0"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   Text="特防："/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="spdbasedisplay"/>
+
+            <Editor Grid.Row="6"
+                    Grid.Column="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPDIV"
+                    TextChanged="applyspdIV"
+                    Keyboard="Numeric"/>
+
+            <Editor Grid.Row="6"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPDEV"
+                    TextChanged="applyspdEV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsVisible="false"
+                    Grid.Row="6"
+                    Grid.Column="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPDGV"
+                    TextChanged="applyspdGV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="6"
+                    Grid.Column="5"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalspddisplay"/>
+
+            <CheckBox Grid.Row="6"
+                      Grid.Column="6"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      x:Name="SPDHyper"
+                      CheckedChanged="applySPDhyper"/>
+
+            <!-- 速度 -->
+            <Label Grid.Row="7"
+                   Grid.Column="0"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   Text="速度："/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="spebasedisplay"/>
+
+            <Editor Grid.Row="7"
+                    Grid.Column="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPEIV"
+                    TextChanged="applyspeIV"
+                    Keyboard="Numeric"/>
+
+            <Editor Grid.Row="7"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPEEV"
+                    TextChanged="applyspeEV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsVisible="false"
+                    Grid.Row="7"
+                    Grid.Column="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="SPEGV"
+                    TextChanged="applyspeGV"
+                    Keyboard="Numeric"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="7"
+                    Grid.Column="5"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalspedisplay"/>
+
+            <CheckBox Grid.Row="7"
+                      Grid.Column="6"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      x:Name="SPEHyper"
+                      CheckedChanged="applySPEhyper"/>
+
+            <!-- 总计 -->
+            <Label Grid.Row="8"
+                   Grid.Column="0"
+                   HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   Text="总计："/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="8"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalbasedisplay"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="8"
+                    Grid.Column="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalIVdisplay"/>
+
+            <Editor IsReadOnly="True"
+                    Grid.Row="8"
+                    Grid.Column="3"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    x:Name="totalEVdisplay"/>
+
+            <!-- 隐藏特性 -->
+            <Label x:Name="HiddenPLabel"
+                   IsVisible="false"
+                   Grid.Row="9"
+                   Grid.Column="0"
+                   Text="觉醒力量"
+                   Grid.ColumnSpan="2"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center"/>
+
+            <Picker x:Name="HiddenPowerPicker"
+                    IsVisible="false"
+                    Grid.Row="9"
+                    Grid.Column="2"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"
+                    SelectedIndexChanged="applyHiddenPower"/>
+
+            <!-- 太晶属性 -->
+            <Label x:Name="OvTeralabel"
+                   IsVisible="false"
+                   Grid.Row="9"
+                   Grid.Column="0"
+                   Text="覆盖太晶属性："
+                   WidthRequest="152"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center"></Label>
+
+            <Picker IsVisible="false"
+                    Grid.Row="9"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    x:Name="Teratypepicker"
+                    Title="太晶属性"
+                    SelectedIndexChanged="applytera"></Picker>
+
+            <Label x:Name="OrTeralabel"
+                   IsVisible="false"
+                   Grid.Row="10"
+                   Grid.Column="0"
+                   Text="原始太晶属性："
+                   WidthRequest="152"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center"></Label>
+
+            <Picker IsVisible="false"
+                    Grid.Row="10"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    x:Name="MainTeratypepicker"
+                    Title="太晶属性"
+                    SelectedIndexChanged="applymaintera"></Picker>
+
+            <Image x:Name="teratypeimage"
+                   IsVisible="false"
+                   Grid.Row="10"
+                   Grid.Column="5"
+                   HeightRequest="64"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+            <!-- 个体值按钮 -->
+            <Button WidthRequest="150"
+                    Grid.Row="11"
+                    Grid.Column="1"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Text="随机个体值"
+                    Clicked="randomizeivs"/>
+
+            <Button WidthRequest="150"
+                    Grid.Row="11"
+                    Grid.Column="4"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Text="满个体值"
+                    Clicked="perfectivs"/>
+
+            <Button x:Name="randomEv"
+                    WidthRequest="150"
+                    Grid.Row="12"
+                    Grid.Column="1"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Text="随机努力值"
+                    Clicked="randomizeevs"/>
+
+            <Button x:Name="suggestedEv"
+                    WidthRequest="150"
+                    Grid.Row="12"
+                    Grid.Column="4"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    Text="推荐努力值"
+                    Clicked="suggestedevs"/>
+
+            <!-- 极巨化 -->
+            <Label x:Name="dmaxlabel"
+                   IsVisible="false"
+                   Grid.Row="13"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   Text="极巨等级："/>
+
+            <l:NumericUpDown x:Name="dmaxleveleditor"
+                             IsVisible="false"
+                             Grid.Row="13"
+                             Grid.Column="2"
+                             ValueChanged="applydmaxlevel"
+                             MinValue="0"
+                             MaxValue="10"/>
+
+            <CheckBox x:Name="GmaxCheck"
+                      IsVisible="false"
+                      Grid.Row="13"
+                      Grid.Column="3"
+                      CheckedChanged="applygmax"/>
+
+            <Label x:Name="gmaxlabel"
+                   IsVisible="false"
+                   Grid.Row="13"
+                   Grid.Column="4"
+                   Grid.ColumnSpan="2"
+                   VerticalOptions="Center"
+                   Text="超极巨化"/>
+
+            <!-- 头目 / 王 -->
+            <CheckBox x:Name="Alphacheck"
+                      IsVisible="false"
+                      Grid.Row="14"
+                      Grid.Column="0"
+                      CheckedChanged="applyalhpastatus"/>
+
+            <Label x:Name="alphalabel"
+                   IsVisible="false"
+                   Grid.Row="14"
+                   Grid.Column="1"
+                   VerticalOptions="Center"
+                   Grid.ColumnSpan="2"
+                   Text="头目"/>
+
+            <CheckBox x:Name="Noblecheck"
+                      IsVisible="false"
+                      Grid.Row="14"
+                      Grid.Column="3"
+                      CheckedChanged="applynoblestatus"/>
+
+            <Label x:Name="noblelabel"
+                   VerticalOptions="Center"
+                   IsVisible="false"
+                   Grid.Row="14"
+                   Grid.Column="4"
+                   Grid.ColumnSpan="2"
+                   Text="王"/>
 
         </Grid>
 
     </ScrollView>
-
     </RefreshView>
 </ContentPage>
