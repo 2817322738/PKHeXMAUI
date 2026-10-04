@@ -2,34 +2,34 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PKHeXMAUI.MedalEditor"
-             Title="Medal Editor">
+             Title="奖章编辑器">
     <ScrollView>
         <VerticalStackLayout>
             <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-                <ColumnDefinition Width="200"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-               
-            <CollectionView x:Name="rankside" WidthRequest="200" HeightRequest="400" Grid.Row="0" Grid.Column="0"></CollectionView>
-            <CollectionView x:Name="distsuperside" WidthRequest="200" HeightRequest="400" Grid.Column="1" Grid.Row="0"></CollectionView>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <CollectionView x:Name="rankside" WidthRequest="200" HeightRequest="400" Grid.Row="0" Grid.Column="0"></CollectionView>
+                <CollectionView x:Name="distsuperside" WidthRequest="200" HeightRequest="400" Grid.Column="1" Grid.Row="0"></CollectionView>
                 <CheckBox x:Name="SuperUnlockedCheck" HorizontalOptions="End" Grid.Column="0" Grid.Row="1" CheckedChanged="UnlockSuperTraining" IsVisible="false"/>
-                <Label x:Name="SuperUnlockLabel" Grid.Column="1" Grid.Row="1" Text="Secret Training Unlocked" IsVisible="false"/>
+                <Label x:Name="SuperUnlockLabel" Grid.Column="1" Grid.Row="1" Text="超级训练已解锁" IsVisible="false"/>
                 <CheckBox x:Name="SecretCompleteCheck" HorizontalOptions="End" Grid.Column="0" Grid.Row="2" CheckedChanged="CompleteSecretTraining" IsVisible="false"/>
-                <Label x:Name="SecretCompleteLabel" Grid.Column="1" Grid.Row="2"  Text="Secret Training Complete" IsVisible="false"/>
-                <Label x:Name="LastBagLabel" Grid.Column="0" Grid.Row="3" Text="Last Used Bag:" IsVisible="false"/>
+                <Label x:Name="SecretCompleteLabel" Grid.Column="1" Grid.Row="2" Text="秘密训练已完成" IsVisible="false"/>
+                <Label x:Name="LastBagLabel" Grid.Column="0" Grid.Row="3" Text="上次使用的沙袋：" IsVisible="false"/>
                 <Picker x:Name="BagPicker" Grid.Column="1" Grid.Row="3" IsVisible="false"/>
             </Grid>
-            <Button Text="Apply All" Clicked="ApplyAllST"></Button>
-            <Button Text="Remove All" Clicked="RemoveAllST"/>
-            <Button Text="Save" Clicked="SaveST"></Button>
-            <Button Text="Cancel" Clicked="CloseST"/>
+            <Button Text="全部应用" Clicked="ApplyAllST"></Button>
+            <Button Text="全部移除" Clicked="RemoveAllST"/>
+            <Button Text="保存" Clicked="SaveST"></Button>
+            <Button Text="取消" Clicked="CloseST"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
