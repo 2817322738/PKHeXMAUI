@@ -111,8 +111,23 @@ naturepicker.ItemSource = chineseNatures;
             statnaturepicker.ItemSource = chineseNatures;
         }
 
-        helditempicker.DisplayMemberPath = "Text";
-        helditempicker.ItemSource = (IList)datasourcefiltered.Items;
+        // 携带物品：使用 PKHeX Core 自带的简体中文名称
+List<ComboItem> chineseItems = [];
+
+var chineseItemStrings = GameInfo.GetStrings("zh-Hans");
+
+foreach (var item in datasourcefiltered.Items)
+{
+    string chineseName =
+        chineseItemStrings.Item[item.Value];
+
+    chineseItems.Add(
+        new ComboItem(chineseName, item.Value)
+    );
+}
+
+helditempicker.DisplayMemberPath = "Text";
+helditempicker.ItemSource = chineseItems;
 
         if (datasourcefiltered.Items.Count > 0)
         {
