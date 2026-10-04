@@ -24,13 +24,13 @@ jobs:
         run: dotnet workload install maui-android --skip-manifest-update
 
       - name: Restore Android project
-        run: dotnet restore PKHeX.MAUI.csproj -p:TargetFramework=net10.0-android36.0
+        run: dotnet restore PKHeX.MAUI.csproj -p:TargetFramework=net10.0-android36.0 -r android-arm64
 
       - name: Build Android APK
-        run: dotnet publish PKHeX.MAUI.csproj -f net10.0-android36.0 -c Release --no-restore
+        run: dotnet publish PKHeX.MAUI.csproj -f net10.0-android36.0 -c Release -r android-arm64 --no-restore
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PKHeX-MAUI-Android
-          path: '**/bin/Release/net10.0-android36.0/publish/*.apk'
+          path: '**/bin/Release/net10.0-android36.0/android-arm64/publish/*.apk'
