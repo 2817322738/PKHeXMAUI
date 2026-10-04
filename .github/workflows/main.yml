@@ -20,6 +20,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Install MAUI Android workload
+        working-directory: /tmp
         run: dotnet workload install maui-android --skip-manifest-update
 
       - name: Restore dependencies
