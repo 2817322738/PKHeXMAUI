@@ -1,4 +1,3 @@
-
 using static PKHeXMAUI.MainPage;
 using PKHeX.Core;
 using System.Windows.Input;
@@ -15,20 +14,23 @@ public partial class Items : TabbedPage
     private readonly SaveFile Origin;
     private readonly SaveFile SAV;
     public static int currentcount = 995;
+
     public Items()
-	{
+    {
         InitializeComponent();
         SAV = (Origin = sav).Clone();
         itemlist = [.. GameInfo.Strings.GetItemStrings(SAV.Context, SAV.Version)];
+
         for (int i = 0; i < itemlist.Length; i++)
         {
             if (string.IsNullOrEmpty(itemlist[i]))
-                itemlist[i] = $"(Item #{i:000})";
+                itemlist[i] = $"(道具 #{i:000})";
         }
+
         if (Remote.Connected)
         {
             var success = Remote.Injector.ReadBlockFromString(Remote, sav, "Items", out var data);
-            if(success)
+            if (success)
             {
                 switch (sav)
                 {
@@ -43,7 +45,7 @@ public partial class Items : TabbedPage
             }
             else
             {
-                DisplayAlertAsync("Error", "No Data Found, I guess", "okay...");
+                DisplayAlertAsync("错误", "未找到数据", "确定");
             }
         }
 
@@ -52,114 +54,175 @@ public partial class Items : TabbedPage
         foreach (var pouch in pouches.Pouches)
         {
             var content = new ContentPage() { Title = pouch.Type.ToString() };
+
             Grid header = [];
             header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
             header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
             header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
             header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
             header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-            Label headerItem = new() { Text = "Item" };
-            header.Add(headerItem,1);
-            Label headerCount = new() { Text = "Count", HorizontalOptions = LayoutOptions.End };
+
+            Label headerItem = new() { Text = "道具" };
+            header.Add(headerItem, 1);
+
+            Label headerCount = new() { Text = "数量", HorizontalOptions = LayoutOptions.End };
             header.Add(headerCount, 2);
-            Label headerFav = new() { Text = "Fav", HorizontalOptions = LayoutOptions.End };
-            header.Add(headerFav,3);
-            Label headerNew = new() { Text = "New", HorizontalOptions = LayoutOptions.Center};
-            header.Add(headerNew,4);
+
+            Label headerFav = new() { Text = "收藏", HorizontalOptions = LayoutOptions.End };
+            header.Add(headerFav, 3);
+
+            Label headerNew = new() { Text = "新", HorizontalOptions = LayoutOptions.Center };
+            header.Add(headerNew, 4);
+
             var ItemCollection = new CollectionView
             {
                 WidthRequest = 400,
                 HeightRequest = 500,
                 ItemTemplate = new DataTemplate(() =>
-            {
-                Grid grid = [];
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(2, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-                comboBox itemname = new() { Placeholder = "(None)", BackgroundColor = Colors.Transparent, };
-                itemname.SelectedIndexChanged += ChangeItemSprite;
-                var pouchstrings = GetStringsForPouch(pouch.GetAllItems());
-                itemname.ItemSource = pouchstrings;
-                itemname.SetBinding(comboBox.SelectedItemProperty, "name", mode: BindingMode.TwoWay);
-                itemname.Loaded += itemname.ForceSelection;
-                grid.Add(itemname, 1);
-                Image itemsp = new() { HorizontalOptions = LayoutOptions.Start, HeightRequest = 25, WidthRequest = 25 };
-                itemsp.SetBinding(Image.SourceProperty, "itemsprite");
-                grid.Add(itemsp);
-                Editor itemCount = new();
-                itemCount.SetBinding(Editor.TextProperty, "count", mode: BindingMode.TwoWay);
-                grid.Add(itemCount, 2);
-                CheckBox ItemFavCheck = new();
-                ItemFavCheck.SetBinding(CheckBox.IsCheckedProperty, "isfav", mode: BindingMode.TwoWay);
-                grid.Add(ItemFavCheck, 3);
-                CheckBox ItemNewCheck = new();
-                ItemNewCheck.SetBinding(CheckBox.IsCheckedProperty, "isnew", BindingMode.TwoWay);
-                grid.Add(ItemNewCheck, 4);
-                return grid;
-            })
+                {
+                    Grid grid = [];
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(2, GridUnitType.Star) });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
+
+                    comboBox itemname = new()
+                    {
+                        Placeholder = "（无）",
+                        BackgroundColor = Colors.Transparent,
+                    };
+
+                    itemname.SelectedIndexChanged += ChangeItemSprite;
+
+                    var pouchstrings = GetStringsForPouch(pouch.GetAllItems());
+                    itemname.ItemSource = pouchstrings;
+                    itemname.SetBinding(comboBox.SelectedItemProperty, "name", mode: BindingMode.TwoWay);
+                    itemname.Loaded += itemname.ForceSelection;
+
+                    grid.Add(itemname, 1);
+
+                    Image itemsp = new()
+                    {
+                        HorizontalOptions = LayoutOptions.Start,
+                        HeightRequest = 25,
+                        WidthRequest = 25
+                    };
+
+                    itemsp.SetBinding(Image.SourceProperty, "itemsprite");
+                    grid.Add(itemsp);
+
+                    Editor itemCount = new();
+                    itemCount.SetBinding(Editor.TextProperty, "count", mode: BindingMode.TwoWay);
+                    grid.Add(itemCount, 2);
+
+                    CheckBox ItemFavCheck = new();
+                    ItemFavCheck.SetBinding(CheckBox.IsCheckedProperty, "isfav", mode: BindingMode.TwoWay);
+                    grid.Add(ItemFavCheck, 3);
+
+                    CheckBox ItemNewCheck = new();
+                    ItemNewCheck.SetBinding(CheckBox.IsCheckedProperty, "isnew", BindingMode.TwoWay);
+                    grid.Add(ItemNewCheck, 4);
+
+                    return grid;
+                })
             };
+
             var infolist = new List<itemInfo>();
-            foreach(var item in pouch.Items)
+
+            foreach (var item in pouch.Items)
             {
                 infolist.Add(new itemInfo(item, itemlist));
             }
+
             SourceList.Add(infolist);
             ItemCollection.ItemsSource = infolist;
-            Button GiveAll = new() { Text = "Give All" };
+
+            Button GiveAll = new() { Text = "全部给予" };
             GiveAll.Clicked += GiveAll_Clicked;
-            ToolTipProperties.SetText(GiveAll, "Gives you every item for this bag at the Count above even if you don't have it");
-            Button ModifyAll = new() { Text = "Modify All" };
+
+            ToolTipProperties.SetText(
+                GiveAll,
+                "将此袋中的所有道具数量设置为上方数量，即使你当前没有这些道具"
+            );
+
+            Button ModifyAll = new() { Text = "全部修改" };
             ModifyAll.Clicked += ModifyAll_Clicked;
-            ToolTipProperties.SetText(ModifyAll, "Gives you the Count above for any item you already have");
+
+            ToolTipProperties.SetText(
+                ModifyAll,
+                "将你已有的所有道具数量设置为上方数量"
+            );
+
             Editor GiveCount = new() { Text = "995" };
             GiveCount.TextChanged += SetCount;
-            Button ClearAll = new() { Text = "Clear All" };
-            ToolTipProperties.SetText(ClearAll, "Clears the current bag");
+
+            Button ClearAll = new() { Text = "全部清空" };
+            ToolTipProperties.SetText(
+                ClearAll,
+                "清空当前道具袋"
+            );
+
             ClearAll.Clicked += ClearAll_Clicked;
+
             var itemrefresh = new RefreshView();
+
             var itemscroll = new ScrollView
             {
                 Content = new StackLayout()
                 {
                     Children =
-                {
-                    header, ItemCollection, GiveCount,GiveAll,ModifyAll,ClearAll
-                }
+                    {
+                        header,
+                        ItemCollection,
+                        GiveCount,
+                        GiveAll,
+                        ModifyAll,
+                        ClearAll
+                    }
                 }
             };
+
             itemrefresh.Content = itemscroll;
-            ICommand refreshview = new Command(async() =>
+
+            ICommand refreshview = new Command(async () =>
             {
                 var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
                 ItemCollection.ItemsSource = SourceList[pindex];
                 itemrefresh.IsRefreshing = false;
             });
+
             itemrefresh.Command = refreshview;
             content.Content = itemrefresh;
             ItemsMain.Children.Add(content);
         }
+
         ItemsMain.CurrentPageChanged += SetCount;
     }
+
     private void ClearAll_Clicked(object? sender, EventArgs? e)
     {
         var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
         var list = SourceList[pindex];
         list.Clear();
+
         var pouchlist = pouches.Pouches[pindex];
         pouchlist.RemoveAll();
+
         foreach (var item in pouchlist.Items)
         {
             list.Add(new itemInfo(item, itemlist));
         }
+
         SourceList[pindex] = list;
     }
+
     private void SetCount(object? sender, EventArgs? e)
     {
         if (sender is Editor ed)
         {
             var parsed = int.TryParse(ed.Text, out var count);
+
             if (parsed)
                 currentcount = count;
         }
@@ -168,64 +231,87 @@ public partial class Items : TabbedPage
             currentcount = 995;
         }
     }
+
     private void GiveAll_Clicked(object? sender, EventArgs? e)
     {
-        var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage)-1;
+        var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
         var list = SourceList[pindex];
         list.Clear();
+
         var pouchlist = pouches.Pouches[pindex];
         var allitems = pouchlist.GetAllItems();
+
         pouchlist.GiveAllItems(sav.Inventory, allitems, currentcount);
-        foreach(var item in pouchlist.Items)
+
+        foreach (var item in pouchlist.Items)
         {
             list.Add(new itemInfo(item, itemlist));
         }
+
         SourceList[pindex] = list;
     }
+
     private void ModifyAll_Clicked(object? sender, EventArgs? e)
     {
         var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
         var list = SourceList[pindex];
         list.Clear();
+
         var pouchlist = pouches.Pouches[pindex];
         pouchlist.ModifyAllCount(currentcount);
+
         foreach (var item in pouchlist.Items)
         {
-            list.Add(new itemInfo(item,itemlist));
+            list.Add(new itemInfo(item, itemlist));
         }
+
         SourceList[pindex] = list;
     }
 
     private string[] GetStringsForPouch(ReadOnlySpan<ushort> items, bool sort = true)
     {
         string[] res = new string[items.Length + 1];
-        for (int i = 0; i < res.Length - 1; i++) 
+
+        for (int i = 0; i < res.Length - 1; i++)
             res[i] = itemlist[items[i]];
+
         res[items.Length] = itemlist[0];
+
         if (sort)
             Array.Sort(res);
+
         return res;
     }
 
     private async void SaveItemsClicked(object sender, EventArgs e)
     {
         int i = 0;
-        saveitems.Text = "saving...";
+
+        saveitems.Text = "保存中...";
+
         Task.Delay(100);
-       foreach(var pouch in pouches.Pouches)
+
+        foreach (var pouch in pouches.Pouches)
         {
-            await setbag(pouch,i);
+            await setbag(pouch, i);
             i++;
         }
+
         pouches.CopyTo(SAV);
         Origin.CopyChangesFrom(SAV);
+
         if (Remote.Connected)
         {
-            if(Remote.Injector is LPBDSP)
+            if (Remote.Injector is LPBDSP)
             {
                 try
                 {
-                    Remote.Injector.WriteBlockFromString(Remote, "Items", ((SAV8BS)Origin).Items.Data.ToArray(), ((SAV8BS)Origin).Items);
+                    Remote.Injector.WriteBlockFromString(
+                        Remote,
+                        "Items",
+                        ((SAV8BS)Origin).Items.Data.ToArray(),
+                        ((SAV8BS)Origin).Items
+                    );
                 }
                 catch (Exception) { }
             }
@@ -233,69 +319,112 @@ public partial class Items : TabbedPage
             {
                 try
                 {
-                    Remote.Injector.WriteBlocksFromSAV(Remote, "Items", Origin);
+                    Remote.Injector.WriteBlocksFromSAV(
+                        Remote,
+                        "Items",
+                        Origin
+                    );
                 }
                 catch (Exception) { }
             }
         }
+
         await Navigation.PopModalAsync();
     }
-    private async Task setbag(InventoryPouch pouch,int sourceindex)
+
+    private async Task setbag(InventoryPouch pouch, int sourceindex)
     {
         int ctr = 0;
         var list = SourceList[sourceindex];
-            foreach (var it in list)
-            {
-                var itemindex = Array.IndexOf(itemlist, it.name);
-                var validct = int.TryParse(it.count, out var itemct);
-                if (itemindex <= 0) // Compression of Empty Slots
-                    continue;
-                if (!validct)
-                    continue;
 
-                var item = pouch.GetEmpty(itemindex, itemct);
-                if (item is IItemFavorite f)
-                    f.IsFavorite = it.isfav;
-                if (item is IItemNewFlag n)
-                    n.IsNew = it.isnew;
-                if (item is IItemFreeSpace fs)
-                    fs.IsFreeSpace = it.isfreespace;
-                if (item is IItemFreeSpaceIndex fi)
-                    fi.FreeSpaceIndex = it.isfreespaceindex;
-                pouch.Items[ctr] = item;
-                ctr++;
-            }
+        foreach (var it in list)
+        {
+            var itemindex = Array.IndexOf(itemlist, it.name);
+            var validct = int.TryParse(it.count, out var itemct);
 
-            for (int i = ctr; i < pouch.Items.Length; i++)
-                pouch.Items[i] = pouch.GetEmpty(); // Empty Slots at the end
+            if (itemindex <= 0)
+                continue;
+
+            if (!validct)
+                continue;
+
+            var item = pouch.GetEmpty(itemindex, itemct);
+
+            if (item is IItemFavorite f)
+                f.IsFavorite = it.isfav;
+
+            if (item is IItemNewFlag n)
+                n.IsNew = it.isnew;
+
+            if (item is IItemFreeSpace fs)
+                fs.IsFreeSpace = it.isfreespace;
+
+            if (item is IItemFreeSpaceIndex fi)
+                fi.FreeSpaceIndex = it.isfreespaceindex;
+
+            pouch.Items[ctr] = item;
+            ctr++;
+        }
+
+        for (int i = ctr; i < pouch.Items.Length; i++)
+            pouch.Items[i] = pouch.GetEmpty();
     }
 
     private void CloseItems(object? sender, EventArgs? e)
     {
         Navigation.PopModalAsync();
     }
+
 #nullable enable
+
     private void ChangeItemSprite(object? sender, EventArgs? e)
     {
         var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
+
         if (pindex < 0)
             return;
+
         var CurrentSource = SourceList[pindex];
-        itemInfo? CurrentItem = CurrentSource.Find(z => z.name == (string?)((comboBox?)sender)?.SelectedItem);
+
+        itemInfo? CurrentItem = CurrentSource.Find(
+            z => z.name == (string?)((comboBox?)sender)?.SelectedItem
+        );
+
         if (CurrentItem is not null)
         {
-            var lump = HeldItemLumpUtil.GetIsLump(CurrentItem.InvItem.Index, sav.Context);
-            CurrentItem.itemsprite = sav.Generation >= 9 ? lump is HeldItemLumpImage.TechnicalMachine ? "aitem_tm.png" : lump is HeldItemLumpImage.TechnicalRecord ? "aitem_tr.png" : $"aitem_{Array.IndexOf(itemlist, CurrentItem.name)}.png" : lump is HeldItemLumpImage.TechnicalMachine ? "bitem_tm.png" : lump is HeldItemLumpImage.TechnicalRecord ? "bitem_tr.png" : $"bitem_{Array.IndexOf(itemlist, CurrentItem.name)}.png";
+            var lump = HeldItemLumpUtil.GetIsLump(
+                CurrentItem.InvItem.Index,
+                sav.Context
+            );
+
+            CurrentItem.itemsprite =
+                sav.Generation >= 9
+                    ? lump is HeldItemLumpImage.TechnicalMachine
+                        ? "aitem_tm.png"
+                        : lump is HeldItemLumpImage.TechnicalRecord
+                            ? "aitem_tr.png"
+                            : $"aitem_{Array.IndexOf(itemlist, CurrentItem.name)}.png"
+                    : lump is HeldItemLumpImage.TechnicalMachine
+                        ? "bitem_tm.png"
+                        : lump is HeldItemLumpImage.TechnicalRecord
+                            ? "bitem_tr.png"
+                            : $"bitem_{Array.IndexOf(itemlist, CurrentItem.name)}.png";
+
             if (itemInfo.Pouch_Material_SV.Contains((ushort)CurrentItem.InvItem.Index))
                 CurrentItem.itemsprite = "aitem_material.png";
-            if (CurrentItem.InvItem.Index >= 2522 && CurrentItem.InvItem.Index <= 2546)
+
+            if (CurrentItem.InvItem.Index >= 2522 &&
+                CurrentItem.InvItem.Index <= 2546)
                 CurrentItem.itemsprite = "aitem_snack.png";
+
             if (itemInfo.Pouch_Picnic.Contains((ushort)CurrentItem.InvItem.Index))
                 CurrentItem.itemsprite = "aitem_picnic.png";
+
             SourceList[pindex] = CurrentSource;
         }
     }
 }
+
 public class itemInfo
 {
     public string count { get; set; }
@@ -306,29 +435,52 @@ public class itemInfo
     public bool isfreespace { get; set; }
     public uint isfreespaceindex { get; set; }
     public InventoryItem InvItem { get; set; }
+
     public itemInfo(InventoryItem item, string[] itemlist)
     {
         count = item.Count.ToString();
         name = itemlist[item.Index];
+
         if (item is IItemFavorite f)
             isfav = f.IsFavorite;
+
         if (item is IItemNewFlag n)
             isnew = n.IsNew;
+
         if (item is IItemFreeSpace fs)
             isfreespace = fs.IsFreeSpace;
+
         if (item is IItemFreeSpaceIndex fi)
             isfreespaceindex = fi.FreeSpaceIndex;
+
         var lump = HeldItemLumpUtil.GetIsLump(item.Index, sav.Context);
-        itemsprite = sav.Generation >= 9 ? lump is HeldItemLumpImage.TechnicalMachine ? "aitem_tm.png" : lump is HeldItemLumpImage.TechnicalRecord ? "aitem_tr.png" : $"aitem_{item.Index}.png" : lump is HeldItemLumpImage.TechnicalMachine ? "bitem_tm.png" : lump is HeldItemLumpImage.TechnicalRecord ? "bitem_tr.png" : $"bitem_{item.Index}.png";
+
+        itemsprite =
+            sav.Generation >= 9
+                ? lump is HeldItemLumpImage.TechnicalMachine
+                    ? "aitem_tm.png"
+                    : lump is HeldItemLumpImage.TechnicalRecord
+                        ? "aitem_tr.png"
+                        : $"aitem_{item.Index}.png"
+                : lump is HeldItemLumpImage.TechnicalMachine
+                    ? "bitem_tm.png"
+                    : lump is HeldItemLumpImage.TechnicalRecord
+                        ? "bitem_tr.png"
+                        : $"bitem_{item.Index}.png";
+
         if (Pouch_Material_SV.Contains((ushort)item.Index))
             itemsprite = "aitem_material.png";
+
         if (item.Index >= 2522 && item.Index <= 2546)
             itemsprite = "aitem_snack.png";
+
         if (Pouch_Picnic.Contains((ushort)item.Index))
             itemsprite = "aitem_picnic.png";
+
         InvItem = item;
     }
-     public static List<ushort> Pouch_Material_SV =
+
+    public static List<ushort> Pouch_Material_SV =
     [
         1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965,
         1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975,
@@ -347,16 +499,19 @@ public class itemInfo
         2096, 2097, 2098, 2099, 2103, 2104, 2105, 2106, 2107, 2108,
         2109, 2110, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2118,
         2119, 2120, 2121, 2122, 2123, 2126, 2127, 2128, 2129, 2130,
-        2131, 2132, 2133, 2134, 2135, 2136, 2137, 2156, 2157, 2158,
-        2159, 2438, 2439, 2440, 2441, 2442, 2443, 2444, 2445, 2446,
-        2447, 2448, 2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456,
-        2457, 2458, 2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466,
-        2467, 2468, 2469, 2470, 2471, 2472, 2473, 2474, 2475, 2476,
-        2477, 2478, 2484, 2485, 2486, 2487, 2488, 2489, 2490, 2491,
-        2492, 2493, 2494, 2495, 2496, 2497, 2498, 2499, 2500, 2501,
-        2502, 2503, 2504, 2505, 2506, 2507, 2508, 2509, 2510, 2511,
-        2512, 2513, 2514, 2515, 2516, 2517, 2518, 2519, 2520, 2521,
+        2131, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140,
+        2141, 2142, 2143, 2144, 2145, 2146, 2147, 2148, 2149, 2150,
+        2151, 2152, 2153, 2154, 2155, 2156, 2157, 2158, 2159, 2438,
+        2439, 2440, 2441, 2442, 2443, 2444, 2445, 2446, 2447, 2448,
+        2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2457, 2458,
+        2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468,
+        2469, 2470, 2471, 2472, 2473, 2474, 2475, 2476, 2477, 2478,
+        2484, 2485, 2486, 2487, 2488, 2489, 2490, 2491, 2492, 2493,
+        2494, 2495, 2496, 2497, 2498, 2499, 2500, 2501, 2502, 2503,
+        2504, 2505, 2506, 2507, 2508, 2509, 2510, 2511, 2512, 2513,
+        2514, 2515, 2516, 2517, 2518, 2519, 2520, 2521,
     ];
+
     public static List<ushort> Pouch_Picnic =
     [
         2311,
@@ -371,6 +526,5 @@ public class itemInfo
         2399, 2400, 2417, 2418, 2419, 2420, 2421, 2422, 2423, 2424,
         2425, 2426, 2427, 2428, 2429, 2430, 2431, 2432, 2433, 2434,
         2435, 2436, 2437, 2548, 2551, 2552,
-
     ];
 }
