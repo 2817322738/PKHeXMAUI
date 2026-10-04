@@ -32,12 +32,35 @@ public partial class propertyGrid : ContentView
         { "LivingDexSetShiny", "设置为闪光" }
     };
 
+    // 合法性设置中文名称
+    private static readonly Dictionary<string, string> LegalPropertyNames = new()
+    {
+        { "CheckWordFilter", "检查敏感词过滤" },
+        { "AllowGen1Tradeback", "允许第一世代回溯交换" },
+        { "NicknamedTrade", "带昵称的交换" },
+        { "NicknamedMysteryGift", "带昵称的神秘礼物" },
+        { "RNGFrameNotFound", "未找到 RNG 帧" },
+        { "Gen7TransferStarPID", "第七世代传输星形 PID" },
+        { "Gen8MemoryMissingHT", "第八世代缺少 HT 回忆" },
+        { "Gen8TransferTrackerNotPresent", "第八世代传输追踪器不存在" },
+        { "NicknamedAnotherSpecies", "昵称与宝可梦种类不符" },
+        { "ZeroHeightWeight", "身高/体重为零" },
+        { "CurrentHandlerMismatch", "当前持有人不匹配" },
+        { "CheckActiveHandler", "检查当前持有人" }
+    };
+
     private string GetDisplayName(PropertyInfo property)
     {
         if (CurrentItem is PluginSettings &&
-            AlmPropertyNames.TryGetValue(property.Name, out var chineseName))
+            AlmPropertyNames.TryGetValue(property.Name, out var almName))
         {
-            return chineseName;
+            return almName;
+        }
+
+        if (CurrentItem is LegalSettings &&
+            LegalPropertyNames.TryGetValue(property.Name, out var legalName))
+        {
+            return legalName;
         }
 
         return property.Name;
