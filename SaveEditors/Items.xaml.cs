@@ -18,7 +18,9 @@ public partial class Items : TabbedPage
     public Items()
     {
         InitializeComponent();
+
         SAV = (Origin = sav).Clone();
+
         itemlist = [.. GameInfo.Strings.GetItemStrings(SAV.Context, SAV.Version)];
 
         for (int i = 0; i < itemlist.Length; i++)
@@ -29,23 +31,81 @@ public partial class Items : TabbedPage
 
         if (Remote.Connected)
         {
-            var success = Remote.Injector.ReadBlockFromString(Remote, sav, "Items", out var data);
+            var success = Remote.Injector.ReadBlockFromString(
+                Remote,
+                sav,
+                "Items",
+                out var data
+            );
+
             if (success)
             {
-                switch (sav)
+                try
                 {
-                    case SAV9ZA za: data?.ToArray()[0].CopyTo(za.Items.Data.ToArray(), 0); break;
-                    case SAV9SV s: data?.ToArray()[0].CopyTo(s.Items.Data.ToArray(), 0); break;
-                    case SAV8LA la: data?.ToArray()[0].CopyTo(la.Items.Data.ToArray(), 0); break;
-                    case SAV8BS bs: data?.ToArray()[0].CopyTo(bs.Items.Data.ToArray(), 0); break;
-                    case SAV8SWSH sw: data?.ToArray()[0].CopyTo(sw.Items.Data.ToArray(), 0); break;
-                    case SAV7 s7: data?.ToArray()[0].CopyTo(s7.Items.Data.ToArray(), 0); break;
-                    case SAV6 s6: data?.ToArray()[0].CopyTo(s6.Items.Data.ToArray(), 0); break;
+                    switch (sav)
+                    {
+                        case SAV9ZA za:
+                            data?.ToArray()[0].CopyTo(
+                                za.Items.Data.ToArray(),
+                                0
+                            );
+                            break;
+
+                        case SAV9SV s:
+                            data?.ToArray()[0].CopyTo(
+                                s.Items.Data.ToArray(),
+                                0
+                            );
+                            break;
+
+                        case SAV8LA la:
+                            data?.ToArray()[0].CopyTo(
+                                la.Items.Data.ToArray(),
+                                0
+                            );
+                            break;
+
+                        case SAV8BS bs:
+                            data?.ToArray()[0].CopyTo(
+                                bs.Items.Data.ToArray(),
+                                0
+                            );
+                            break;
+
+                        case SAV8SWSH sw:
+                            data?.ToArray()[0].CopyTo(
+                                sw.Items.Data.ToArray(),
+                                0
+                            );
+                            break;
+
+                        case SAV7 s7:
+                            data?.ToArray()[0].CopyTo(
+                                s7.Items.Data.ToArray(),
+                                0
+                            );
+                            break;
+
+                        case SAV6 s6:
+                            data?.ToArray()[0].CopyTo(
+                                s6.Items.Data.ToArray(),
+                                0
+                            );
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                    // 远程道具数据读取失败时，不让道具编辑器直接崩溃
                 }
             }
             else
             {
-                DisplayAlertAsync("错误", "未找到数据", "确定");
+                _ = DisplayAlertAsync(
+                    "错误",
+                    "未找到数据",
+                    "确定"
+                );
             }
         }
 
@@ -53,39 +113,125 @@ public partial class Items : TabbedPage
 
         foreach (var pouch in pouches.Pouches)
         {
-            var content = new ContentPage() { Title = pouch.Type.ToString() };
+            var content = new ContentPage()
+            {
+                Title = pouch.Type.ToString()
+            };
 
             Grid header = [];
-            header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-            header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-            header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-            header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-            header.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
 
-            Label headerItem = new() { Text = "道具" };
+            header.ColumnDefinitions.Add(
+                new ColumnDefinition()
+                {
+                    Width = GridLength.Star
+                }
+            );
+
+            header.ColumnDefinitions.Add(
+                new ColumnDefinition()
+                {
+                    Width = GridLength.Star
+                }
+            );
+
+            header.ColumnDefinitions.Add(
+                new ColumnDefinition()
+                {
+                    Width = GridLength.Star
+                }
+            );
+
+            header.ColumnDefinitions.Add(
+                new ColumnDefinition()
+                {
+                    Width = GridLength.Star
+                }
+            );
+
+            header.ColumnDefinitions.Add(
+                new ColumnDefinition()
+                {
+                    Width = GridLength.Star
+                }
+            );
+
+            Label headerItem = new()
+            {
+                Text = "道具"
+            };
+
             header.Add(headerItem, 1);
 
-            Label headerCount = new() { Text = "数量", HorizontalOptions = LayoutOptions.End };
+            Label headerCount = new()
+            {
+                Text = "数量",
+                HorizontalOptions = LayoutOptions.End
+            };
+
             header.Add(headerCount, 2);
 
-            Label headerFav = new() { Text = "收藏", HorizontalOptions = LayoutOptions.End };
+            Label headerFav = new()
+            {
+                Text = "收藏",
+                HorizontalOptions = LayoutOptions.End
+            };
+
             header.Add(headerFav, 3);
 
-            Label headerNew = new() { Text = "新", HorizontalOptions = LayoutOptions.Center };
+            Label headerNew = new()
+            {
+                Text = "新",
+                HorizontalOptions = LayoutOptions.Center
+            };
+
             header.Add(headerNew, 4);
 
             var ItemCollection = new CollectionView
             {
                 WidthRequest = 400,
                 HeightRequest = 500,
+
                 ItemTemplate = new DataTemplate(() =>
                 {
                     Grid grid = [];
-                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(2, GridUnitType.Star) });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
+
+                    grid.ColumnDefinitions.Add(
+                        new ColumnDefinition()
+                        {
+                            Width = GridLength.Star
+                        }
+                    );
+
+                    grid.ColumnDefinitions.Add(
+                        new ColumnDefinition()
+                        {
+                            Width = new GridLength(
+                                2,
+                                GridUnitType.Star
+                            )
+                        }
+                    );
+
+                    grid.ColumnDefinitions.Add(
+                        new ColumnDefinition()
+                        {
+                            Width = GridLength.Star
+                        }
+                    );
+
+                    grid.ColumnDefinitions.Add(
+                        new ColumnDefinition()
+                        {
+                            Width = GridLength.Star
+                        }
+                    );
+
+                    grid.ColumnDefinitions.Add(
+                        new ColumnDefinition()
+                        {
+                            Width = GridLength.Star
+                        }
+                    );
 
                     comboBox itemname = new()
                     {
@@ -95,9 +241,18 @@ public partial class Items : TabbedPage
 
                     itemname.SelectedIndexChanged += ChangeItemSprite;
 
-                    var pouchstrings = GetStringsForPouch(pouch.GetAllItems());
+                    var pouchstrings = GetStringsForPouch(
+                        pouch.GetAllItems()
+                    );
+
                     itemname.ItemSource = pouchstrings;
-                    itemname.SetBinding(comboBox.SelectedItemProperty, "name", mode: BindingMode.TwoWay);
+
+                    itemname.SetBinding(
+                        comboBox.SelectedItemProperty,
+                        "name",
+                        mode: BindingMode.TwoWay
+                    );
+
                     itemname.Loaded += itemname.ForceSelection;
 
                     grid.Add(itemname, 1);
@@ -109,19 +264,41 @@ public partial class Items : TabbedPage
                         WidthRequest = 25
                     };
 
-                    itemsp.SetBinding(Image.SourceProperty, "itemsprite");
+                    itemsp.SetBinding(
+                        Image.SourceProperty,
+                        "itemsprite"
+                    );
+
                     grid.Add(itemsp);
 
                     Editor itemCount = new();
-                    itemCount.SetBinding(Editor.TextProperty, "count", mode: BindingMode.TwoWay);
+
+                    itemCount.SetBinding(
+                        Editor.TextProperty,
+                        "count",
+                        mode: BindingMode.TwoWay
+                    );
+
                     grid.Add(itemCount, 2);
 
                     CheckBox ItemFavCheck = new();
-                    ItemFavCheck.SetBinding(CheckBox.IsCheckedProperty, "isfav", mode: BindingMode.TwoWay);
+
+                    ItemFavCheck.SetBinding(
+                        CheckBox.IsCheckedProperty,
+                        "isfav",
+                        mode: BindingMode.TwoWay
+                    );
+
                     grid.Add(ItemFavCheck, 3);
 
                     CheckBox ItemNewCheck = new();
-                    ItemNewCheck.SetBinding(CheckBox.IsCheckedProperty, "isnew", BindingMode.TwoWay);
+
+                    ItemNewCheck.SetBinding(
+                        CheckBox.IsCheckedProperty,
+                        "isnew",
+                        BindingMode.TwoWay
+                    );
+
                     grid.Add(ItemNewCheck, 4);
 
                     return grid;
@@ -132,13 +309,31 @@ public partial class Items : TabbedPage
 
             foreach (var item in pouch.Items)
             {
-                infolist.Add(new itemInfo(item, itemlist));
+                try
+                {
+                    infolist.Add(
+                        new itemInfo(
+                            item,
+                            itemlist
+                        )
+                    );
+                }
+                catch (Exception)
+                {
+                    // 某个异常道具无法解析时，跳过该道具，
+                    // 防止整个道具编辑器闪退。
+                }
             }
 
             SourceList.Add(infolist);
+
             ItemCollection.ItemsSource = infolist;
 
-            Button GiveAll = new() { Text = "全部给予" };
+            Button GiveAll = new()
+            {
+                Text = "全部给予"
+            };
+
             GiveAll.Clicked += GiveAll_Clicked;
 
             ToolTipProperties.SetText(
@@ -146,7 +341,11 @@ public partial class Items : TabbedPage
                 "将此袋中的所有道具数量设置为上方数量，即使你当前没有这些道具"
             );
 
-            Button ModifyAll = new() { Text = "全部修改" };
+            Button ModifyAll = new()
+            {
+                Text = "全部修改"
+            };
+
             ModifyAll.Clicked += ModifyAll_Clicked;
 
             ToolTipProperties.SetText(
@@ -154,10 +353,18 @@ public partial class Items : TabbedPage
                 "将你已有的所有道具数量设置为上方数量"
             );
 
-            Editor GiveCount = new() { Text = "995" };
+            Editor GiveCount = new()
+            {
+                Text = "995"
+            };
+
             GiveCount.TextChanged += SetCount;
 
-            Button ClearAll = new() { Text = "全部清空" };
+            Button ClearAll = new()
+            {
+                Text = "全部清空"
+            };
+
             ToolTipProperties.SetText(
                 ClearAll,
                 "清空当前道具袋"
@@ -187,41 +394,83 @@ public partial class Items : TabbedPage
 
             ICommand refreshview = new Command(async () =>
             {
-                var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
-                ItemCollection.ItemsSource = SourceList[pindex];
+                var pindex = Array.IndexOf(
+                    [.. ItemsMain.Children],
+                    ItemsMain.CurrentPage
+                ) - 1;
+
+                if (pindex >= 0 &&
+                    pindex < SourceList.Count)
+                {
+                    ItemCollection.ItemsSource =
+                        SourceList[pindex];
+                }
+
                 itemrefresh.IsRefreshing = false;
             });
 
             itemrefresh.Command = refreshview;
+
             content.Content = itemrefresh;
+
             ItemsMain.Children.Add(content);
         }
 
         ItemsMain.CurrentPageChanged += SetCount;
     }
 
-    private void ClearAll_Clicked(object? sender, EventArgs? e)
+    private void ClearAll_Clicked(
+        object? sender,
+        EventArgs? e)
     {
-        var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
+        var pindex = Array.IndexOf(
+            [.. ItemsMain.Children],
+            ItemsMain.CurrentPage
+        ) - 1;
+
+        if (pindex < 0 ||
+            pindex >= SourceList.Count ||
+            pindex >= pouches.Pouches.Count)
+            return;
+
         var list = SourceList[pindex];
+
         list.Clear();
 
         var pouchlist = pouches.Pouches[pindex];
+
         pouchlist.RemoveAll();
 
         foreach (var item in pouchlist.Items)
         {
-            list.Add(new itemInfo(item, itemlist));
+            try
+            {
+                list.Add(
+                    new itemInfo(
+                        item,
+                        itemlist
+                    )
+                );
+            }
+            catch (Exception)
+            {
+                // 忽略无法解析的道具
+            }
         }
 
         SourceList[pindex] = list;
     }
 
-    private void SetCount(object? sender, EventArgs? e)
+    private void SetCount(
+        object? sender,
+        EventArgs? e)
     {
         if (sender is Editor ed)
         {
-            var parsed = int.TryParse(ed.Text, out var count);
+            var parsed = int.TryParse(
+                ed.Text,
+                out var count
+            );
 
             if (parsed)
                 currentcount = count;
@@ -232,50 +481,122 @@ public partial class Items : TabbedPage
         }
     }
 
-    private void GiveAll_Clicked(object? sender, EventArgs? e)
+    private void GiveAll_Clicked(
+        object? sender,
+        EventArgs? e)
     {
-        var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
+        var pindex = Array.IndexOf(
+            [.. ItemsMain.Children],
+            ItemsMain.CurrentPage
+        ) - 1;
+
+        if (pindex < 0 ||
+            pindex >= SourceList.Count ||
+            pindex >= pouches.Pouches.Count)
+            return;
+
         var list = SourceList[pindex];
+
         list.Clear();
 
         var pouchlist = pouches.Pouches[pindex];
+
         var allitems = pouchlist.GetAllItems();
 
-        pouchlist.GiveAllItems(sav.Inventory, allitems, currentcount);
+        pouchlist.GiveAllItems(
+            sav.Inventory,
+            allitems,
+            currentcount
+        );
 
         foreach (var item in pouchlist.Items)
         {
-            list.Add(new itemInfo(item, itemlist));
+            try
+            {
+                list.Add(
+                    new itemInfo(
+                        item,
+                        itemlist
+                    )
+                );
+            }
+            catch (Exception)
+            {
+                // 忽略无法解析的道具
+            }
         }
 
         SourceList[pindex] = list;
     }
 
-    private void ModifyAll_Clicked(object? sender, EventArgs? e)
+    private void ModifyAll_Clicked(
+        object? sender,
+        EventArgs? e)
     {
-        var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
+        var pindex = Array.IndexOf(
+            [.. ItemsMain.Children],
+            ItemsMain.CurrentPage
+        ) - 1;
+
+        if (pindex < 0 ||
+            pindex >= SourceList.Count ||
+            pindex >= pouches.Pouches.Count)
+            return;
+
         var list = SourceList[pindex];
+
         list.Clear();
 
         var pouchlist = pouches.Pouches[pindex];
-        pouchlist.ModifyAllCount(currentcount);
+
+        pouchlist.ModifyAllCount(
+            currentcount
+        );
 
         foreach (var item in pouchlist.Items)
         {
-            list.Add(new itemInfo(item, itemlist));
+            try
+            {
+                list.Add(
+                    new itemInfo(
+                        item,
+                        itemlist
+                    )
+                );
+            }
+            catch (Exception)
+            {
+                // 忽略无法解析的道具
+            }
         }
 
         SourceList[pindex] = list;
     }
 
-    private string[] GetStringsForPouch(ReadOnlySpan<ushort> items, bool sort = true)
+    private string[] GetStringsForPouch(
+        ReadOnlySpan<ushort> items,
+        bool sort = true)
     {
         string[] res = new string[items.Length + 1];
 
         for (int i = 0; i < res.Length - 1; i++)
-            res[i] = itemlist[items[i]];
+        {
+            var index = items[i];
 
-        res[items.Length] = itemlist[0];
+            if (index < itemlist.Length)
+            {
+                res[i] = itemlist[index];
+            }
+            else
+            {
+                res[i] = $"(道具 #{index:000})";
+            }
+        }
+
+        res[items.Length] =
+            itemlist.Length > 0
+                ? itemlist[0]
+                : "（无）";
 
         if (sort)
             Array.Sort(res);
@@ -283,21 +604,29 @@ public partial class Items : TabbedPage
         return res;
     }
 
-    private async void SaveItemsClicked(object sender, EventArgs e)
+    private async void SaveItemsClicked(
+        object sender,
+        EventArgs e)
     {
         int i = 0;
 
         saveitems.Text = "保存中...";
 
-        Task.Delay(100);
+        await Task.Delay(100);
 
         foreach (var pouch in pouches.Pouches)
         {
-            await setbag(pouch, i);
+            if (i < SourceList.Count)
+                await setbag(
+                    pouch,
+                    i
+                );
+
             i++;
         }
 
         pouches.CopyTo(SAV);
+
         Origin.CopyChangesFrom(SAV);
 
         if (Remote.Connected)
@@ -309,11 +638,17 @@ public partial class Items : TabbedPage
                     Remote.Injector.WriteBlockFromString(
                         Remote,
                         "Items",
-                        ((SAV8BS)Origin).Items.Data.ToArray(),
+                        ((SAV8BS)Origin)
+                            .Items
+                            .Data
+                            .ToArray(),
                         ((SAV8BS)Origin).Items
                     );
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                    // 忽略远程写入错误
+                }
             }
             else
             {
@@ -325,22 +660,39 @@ public partial class Items : TabbedPage
                         Origin
                     );
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                    // 忽略远程写入错误
+                }
             }
         }
 
         await Navigation.PopModalAsync();
     }
 
-    private async Task setbag(InventoryPouch pouch, int sourceindex)
+    private async Task setbag(
+        InventoryPouch pouch,
+        int sourceindex)
     {
+        if (sourceindex < 0 ||
+            sourceindex >= SourceList.Count)
+            return;
+
         int ctr = 0;
+
         var list = SourceList[sourceindex];
 
         foreach (var it in list)
         {
-            var itemindex = Array.IndexOf(itemlist, it.name);
-            var validct = int.TryParse(it.count, out var itemct);
+            var itemindex = Array.IndexOf(
+                itemlist,
+                it.name
+            );
+
+            var validct = int.TryParse(
+                it.count,
+                out var itemct
+            );
 
             if (itemindex <= 0)
                 continue;
@@ -348,79 +700,154 @@ public partial class Items : TabbedPage
             if (!validct)
                 continue;
 
-            var item = pouch.GetEmpty(itemindex, itemct);
+            try
+            {
+                var item = pouch.GetEmpty(
+                    itemindex,
+                    itemct
+                );
 
-            if (item is IItemFavorite f)
-                f.IsFavorite = it.isfav;
+                if (item is IItemFavorite f)
+                    f.IsFavorite = it.isfav;
 
-            if (item is IItemNewFlag n)
-                n.IsNew = it.isnew;
+                if (item is IItemNewFlag n)
+                    n.IsNew = it.isnew;
 
-            if (item is IItemFreeSpace fs)
-                fs.IsFreeSpace = it.isfreespace;
+                if (item is IItemFreeSpace fs)
+                    fs.IsFreeSpace = it.isfreespace;
 
-            if (item is IItemFreeSpaceIndex fi)
-                fi.FreeSpaceIndex = it.isfreespaceindex;
+                if (item is IItemFreeSpaceIndex fi)
+                    fi.FreeSpaceIndex =
+                        it.isfreespaceindex;
 
-            pouch.Items[ctr] = item;
-            ctr++;
+                if (ctr < pouch.Items.Length)
+                {
+                    pouch.Items[ctr] = item;
+                    ctr++;
+                }
+            }
+            catch (Exception)
+            {
+                // 某个道具无法写入时跳过
+            }
         }
 
-        for (int i = ctr; i < pouch.Items.Length; i++)
-            pouch.Items[i] = pouch.GetEmpty();
+        for (
+            int i = ctr;
+            i < pouch.Items.Length;
+            i++)
+        {
+            try
+            {
+                pouch.Items[i] =
+                    pouch.GetEmpty();
+            }
+            catch (Exception)
+            {
+                // 忽略无法清空的槽位
+            }
+        }
     }
 
-    private void CloseItems(object? sender, EventArgs? e)
+    private void CloseItems(
+        object? sender,
+        EventArgs? e)
     {
         Navigation.PopModalAsync();
     }
 
 #nullable enable
 
-    private void ChangeItemSprite(object? sender, EventArgs? e)
+    private void ChangeItemSprite(
+        object? sender,
+        EventArgs? e)
     {
-        var pindex = Array.IndexOf([.. ItemsMain.Children], ItemsMain.CurrentPage) - 1;
+        var pindex = Array.IndexOf(
+            [.. ItemsMain.Children],
+            ItemsMain.CurrentPage
+        ) - 1;
 
-        if (pindex < 0)
+        if (pindex < 0 ||
+            pindex >= SourceList.Count)
             return;
 
-        var CurrentSource = SourceList[pindex];
+        var CurrentSource =
+            SourceList[pindex];
 
-        itemInfo? CurrentItem = CurrentSource.Find(
-            z => z.name == (string?)((comboBox?)sender)?.SelectedItem
-        );
+        itemInfo? CurrentItem =
+            CurrentSource.Find(
+                z =>
+                    z.name ==
+                    (string?)((comboBox?)sender)?.SelectedItem
+            );
 
         if (CurrentItem is not null)
         {
-            var lump = HeldItemLumpUtil.GetIsLump(
-                CurrentItem.InvItem.Index,
-                sav.Context
-            );
+            try
+            {
+                var lump =
+                    HeldItemLumpUtil.GetIsLump(
+                        CurrentItem.InvItem.Index,
+                        sav.Context
+                    );
 
-            CurrentItem.itemsprite =
-                sav.Generation >= 9
-                    ? lump is HeldItemLumpImage.TechnicalMachine
-                        ? "aitem_tm.png"
-                        : lump is HeldItemLumpImage.TechnicalRecord
-                            ? "aitem_tr.png"
-                            : $"aitem_{Array.IndexOf(itemlist, CurrentItem.name)}.png"
-                    : lump is HeldItemLumpImage.TechnicalMachine
-                        ? "bitem_tm.png"
-                        : lump is HeldItemLumpImage.TechnicalRecord
-                            ? "bitem_tr.png"
-                            : $"bitem_{Array.IndexOf(itemlist, CurrentItem.name)}.png";
+                CurrentItem.itemsprite =
+                    sav.Generation >= 9
+                        ? lump is HeldItemLumpImage.TechnicalMachine
+                            ? "aitem_tm.png"
+                            : lump is HeldItemLumpImage.TechnicalRecord
+                                ? "aitem_tr.png"
+                                : $"aitem_{Array.IndexOf(
+                                    itemlist,
+                                    CurrentItem.name
+                                )}.png"
+                        : lump is HeldItemLumpImage.TechnicalMachine
+                            ? "bitem_tm.png"
+                            : lump is HeldItemLumpImage.TechnicalRecord
+                                ? "bitem_tr.png"
+                                : $"bitem_{Array.IndexOf(
+                                    itemlist,
+                                    CurrentItem.name
+                                )}.png";
 
-            if (itemInfo.Pouch_Material_SV.Contains((ushort)CurrentItem.InvItem.Index))
-                CurrentItem.itemsprite = "aitem_material.png";
+                if (
+                    CurrentItem.InvItem.Index <= ushort.MaxValue &&
+                    itemInfo.Pouch_Material_SV.Contains(
+                        (ushort)CurrentItem.InvItem.Index
+                    )
+                )
+                {
+                    CurrentItem.itemsprite =
+                        "aitem_material.png";
+                }
 
-            if (CurrentItem.InvItem.Index >= 2522 &&
-                CurrentItem.InvItem.Index <= 2546)
-                CurrentItem.itemsprite = "aitem_snack.png";
+                if (
+                    CurrentItem.InvItem.Index >= 2522 &&
+                    CurrentItem.InvItem.Index <= 2546
+                )
+                {
+                    CurrentItem.itemsprite =
+                        "aitem_snack.png";
+                }
 
-            if (itemInfo.Pouch_Picnic.Contains((ushort)CurrentItem.InvItem.Index))
-                CurrentItem.itemsprite = "aitem_picnic.png";
+                if (
+                    CurrentItem.InvItem.Index <= ushort.MaxValue &&
+                    itemInfo.Pouch_Picnic.Contains(
+                        (ushort)CurrentItem.InvItem.Index
+                    )
+                )
+                {
+                    CurrentItem.itemsprite =
+                        "aitem_picnic.png";
+                }
 
-            SourceList[pindex] = CurrentSource;
+                SourceList[pindex] =
+                    CurrentSource;
+            }
+            catch (Exception)
+            {
+                // 道具图片生成失败时，不让整个编辑器闪退
+            }
         }
     }
 }
@@ -436,10 +863,23 @@ public class itemInfo
     public uint isfreespaceindex { get; set; }
     public InventoryItem InvItem { get; set; }
 
-    public itemInfo(InventoryItem item, string[] itemlist)
+    public itemInfo(
+        InventoryItem item,
+        string[] itemlist)
     {
         count = item.Count.ToString();
-        name = itemlist[item.Index];
+
+        if (
+            item.Index >= 0 &&
+            item.Index < itemlist.Length
+        )
+        {
+            name = itemlist[item.Index];
+        }
+        else
+        {
+            name = $"(道具 #{item.Index:000})";
+        }
 
         if (item is IItemFavorite f)
             isfav = f.IsFavorite;
@@ -451,31 +891,68 @@ public class itemInfo
             isfreespace = fs.IsFreeSpace;
 
         if (item is IItemFreeSpaceIndex fi)
-            isfreespaceindex = fi.FreeSpaceIndex;
+            isfreespaceindex =
+                fi.FreeSpaceIndex;
 
-        var lump = HeldItemLumpUtil.GetIsLump(item.Index, sav.Context);
+        try
+        {
+            var lump =
+                HeldItemLumpUtil.GetIsLump(
+                    item.Index,
+                    sav.Context
+                );
 
-        itemsprite =
-            sav.Generation >= 9
-                ? lump is HeldItemLumpImage.TechnicalMachine
-                    ? "aitem_tm.png"
-                    : lump is HeldItemLumpImage.TechnicalRecord
-                        ? "aitem_tr.png"
-                        : $"aitem_{item.Index}.png"
-                : lump is HeldItemLumpImage.TechnicalMachine
-                    ? "bitem_tm.png"
-                    : lump is HeldItemLumpImage.TechnicalRecord
-                        ? "bitem_tr.png"
-                        : $"bitem_{item.Index}.png";
+            itemsprite =
+                sav.Generation >= 9
+                    ? lump is HeldItemLumpImage.TechnicalMachine
+                        ? "aitem_tm.png"
+                        : lump is HeldItemLumpImage.TechnicalRecord
+                            ? "aitem_tr.png"
+                            : $"aitem_{item.Index}.png"
+                    : lump is HeldItemLumpImage.TechnicalMachine
+                        ? "bitem_tm.png"
+                        : lump is HeldItemLumpImage.TechnicalRecord
+                            ? "bitem_tr.png"
+                            : $"bitem_{item.Index}.png";
+        }
+        catch (Exception)
+        {
+            itemsprite =
+                sav.Generation >= 9
+                    ? "aitem_0.png"
+                    : "bitem_0.png";
+        }
 
-        if (Pouch_Material_SV.Contains((ushort)item.Index))
-            itemsprite = "aitem_material.png";
+        if (
+            item.Index <= ushort.MaxValue &&
+            Pouch_Material_SV.Contains(
+                (ushort)item.Index
+            )
+        )
+        {
+            itemsprite =
+                "aitem_material.png";
+        }
 
-        if (item.Index >= 2522 && item.Index <= 2546)
-            itemsprite = "aitem_snack.png";
+        if (
+            item.Index >= 2522 &&
+            item.Index <= 2546
+        )
+        {
+            itemsprite =
+                "aitem_snack.png";
+        }
 
-        if (Pouch_Picnic.Contains((ushort)item.Index))
-            itemsprite = "aitem_picnic.png";
+        if (
+            item.Index <= ushort.MaxValue &&
+            Pouch_Picnic.Contains(
+                (ushort)item.Index
+            )
+        )
+        {
+            itemsprite =
+                "aitem_picnic.png";
+        }
 
         InvItem = item;
     }
@@ -496,20 +973,21 @@ public class itemInfo
         2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075,
         2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085,
         2086, 2087, 2088, 2089, 2090, 2091, 2092, 2093, 2094, 2095,
-        2096, 2097, 2098, 2099, 2103, 2104, 2105, 2106, 2107, 2108,
-        2109, 2110, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2118,
-        2119, 2120, 2121, 2122, 2123, 2126, 2127, 2128, 2129, 2130,
-        2131, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140,
-        2141, 2142, 2143, 2144, 2145, 2146, 2147, 2148, 2149, 2150,
-        2151, 2152, 2153, 2154, 2155, 2156, 2157, 2158, 2159, 2438,
-        2439, 2440, 2441, 2442, 2443, 2444, 2445, 2446, 2447, 2448,
-        2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2457, 2458,
-        2459, 2460, 2461, 2462, 2463, 2464, 2465, 2466, 2467, 2468,
-        2469, 2470, 2471, 2472, 2473, 2474, 2475, 2476, 2477, 2478,
-        2484, 2485, 2486, 2487, 2488, 2489, 2490, 2491, 2492, 2493,
-        2494, 2495, 2496, 2497, 2498, 2499, 2500, 2501, 2502, 2503,
-        2504, 2505, 2506, 2507, 2508, 2509, 2510, 2511, 2512, 2513,
-        2514, 2515, 2516, 2517, 2518, 2519, 2520, 2521,
+        2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105,
+        2106, 2107, 2108, 2109, 2110, 2111, 2112, 2113, 2114, 2115,
+        2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125,
+        2126, 2127, 2128, 2129, 2130, 2131, 2132, 2133, 2134, 2135,
+        2136, 2137, 2138, 2139, 2140, 2141, 2142, 2143, 2144, 2145,
+        2146, 2147, 2148, 2149, 2150, 2151, 2152, 2153, 2154, 2155,
+        2156, 2157, 2158, 2159, 2438, 2439, 2440, 2441, 2442, 2443,
+        2444, 2445, 2446, 2447, 2448, 2449, 2450, 2451, 2452, 2453,
+        2454, 2455, 2456, 2457, 2458, 2459, 2460, 2461, 2462, 2463,
+        2464, 2465, 2466, 2467, 2468, 2469, 2470, 2471, 2472, 2473,
+        2474, 2475, 2476, 2477, 2478, 2484, 2485, 2486, 2487, 2488,
+        2489, 2490, 2491, 2492, 2493, 2494, 2495, 2496, 2497, 2498,
+        2499, 2500, 2501, 2502, 2503, 2504, 2505, 2506, 2507, 2508,
+        2509, 2510, 2511, 2512, 2513, 2514, 2515, 2516, 2517, 2518,
+        2519, 2520, 2521,
     ];
 
     public static List<ushort> Pouch_Picnic =
